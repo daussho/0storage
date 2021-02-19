@@ -18,7 +18,7 @@ if ($requestMethod === "GET") {
     $decrypted_message = my_decrypt($fileJSON['data'], $secret_key);
 
     $response = [
-        "data" => $decrypted_message
+        "data" => json_decode($decrypted_message, true)
     ];
     fclose($myfile);
 } else if ($requestMethod === "POST") {
