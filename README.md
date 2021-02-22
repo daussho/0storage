@@ -1,5 +1,5 @@
 # RestDB
-A rest interface for SleekDB
+A rest interface for [SleekDB](https://github.com/rakibtg/SleekDB)
 
 ## Implementation list
 - [x] insert
