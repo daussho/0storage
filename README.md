@@ -12,4 +12,4 @@ A (not really) rest interface for [SleekDB](https://github.com/rakibtg/SleekDB).
 - [ ] having
 - [x] search
 - [x] distinct
-- [-] join
+- [x] join (One table join)
