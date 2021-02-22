@@ -2,12 +2,19 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+require_once("src/Autoloader.php");
+
+use \helpers\GlobalHelper;
+
 $dataDir = __DIR__ . "/mydb";
 
 $requestMethod = $_SERVER['REQUEST_METHOD'];
-
-$filename = isset($_GET['filename']) ? $_GET['filename'] : "";
-$secret_key = isset($_GET['key']) ? $_GET['key'] : "";
+if ($requestMethod !== "POST") {
+    GlobalHelper::returnJSON([
+        "error" => "Invalid request"
+    ], 400);
+    return;
+}
 
 $response = [];
 
@@ -18,20 +25,33 @@ $configuration = [
     "primary_key" => "_id"
 ];
 
-if ($requestMethod === "GET") {
-    
-} else if ($requestMethod === "POST") {
-    $newsStore = new \SleekDB\Store("news", $dataDir, $configuration);
-    $article = [
-        "title" => "Google Pixel XL",
-        "about" => "Google announced a new Pixel!",
-        "author" => [
-            "avatar" => "profile-12.jpg",
-            "name" => "Foo Bar"
-        ]
-    ];
-    $response[] = $newsStore->insert($article);
+$requiredQuery = [
+    "table",
+    "operation",
+    "data"
+];
+
+$query = file_get_contents('php://input');
+
+if (empty($query)){
+    $query = [];
+} else {
+    $query = json_decode($query, true);
 }
 
-header("Content-Type: application/json");
-echo json_encode($response);
+$errSchema = GlobalHelper::validatePost($requiredQuery, $query);
+
+if (!empty($errSchema)) {
+    GlobalHelper::returnJSON([
+        "error" => $errSchema
+    ], 400);
+    return;
+}
+
+$newsStore = new \SleekDB\Store($query['table'], $dataDir, $configuration);
+
+if ($query['operation'] == "insert"){
+    $response[] = $newsStore->insert($query['data']);
+}
+
+GlobalHelper::returnJSON($response);
