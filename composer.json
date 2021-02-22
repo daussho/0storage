@@ -1,0 +1,15 @@
+{
+    "name": "daussho/restdb",
+    "description": "A rest interface for SleekDB",
+    "type": "project",
+    "require": {
+        "rakibtg/sleekdb": "^2.7"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Abdul Hafizh Firdaus",
+            "email": "abdulhafizh9@gmail.com"
+        }
+    ]
+}
