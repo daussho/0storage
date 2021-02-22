@@ -17,7 +17,11 @@ class SleekDBHelper {
     static function queryBuilder(\SleekDB\Store $store, $param)
     {
         $builder = $store->createQueryBuilder();
-        
+
+        if (!empty($param['select']) && is_array($param['select'])){
+            $builder = $builder->select($param['select']);
+        }
+
         if (!empty($param['where'])){
             $builder = $builder->where([$param['where']]);
         }

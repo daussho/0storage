@@ -31,7 +31,8 @@ $requiredQuery = [
     "table",
     "operation",
     "data",
-    
+    "select",
+    "where"
 ];
 
 $query = file_get_contents('php://input');
