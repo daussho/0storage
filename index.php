@@ -4,7 +4,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 require_once("src/Autoloader.php");
 
-use \helpers\GlobalHelper;
+use helpers\GlobalHelper;
+use helpers\SleekDBHelper;
 
 $dataDir = __DIR__ . "/mydb";
 
@@ -48,10 +49,10 @@ if (!empty($errSchema)) {
     return;
 }
 
-$newsStore = new \SleekDB\Store($query['table'], $dataDir, $configuration);
+$store = new \SleekDB\Store($query['table'], $dataDir, $configuration);
 
 if ($query['operation'] == "insert"){
-    $response[] = $newsStore->insert($query['data']);
+    $response[] = SleekDBHelper::insertParser($store, $query['data']);
 }
 
 GlobalHelper::returnJSON($response);
