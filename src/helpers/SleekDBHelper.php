@@ -30,6 +30,10 @@ class SleekDBHelper {
             $builder = $builder->skip($param['skip']);
         }
 
+        if (!empty($param['order_by'])){
+            $builder = $builder->orderBy($param['order_by']);
+        }
+
         $data = $builder->getQuery()->fetch();
         return $data;
     }
