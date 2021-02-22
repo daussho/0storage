@@ -1,2 +1,2 @@
-# 0storage
-A dead simple storage for prototyping
+# RestDB
+A rest interface for SleekDB
