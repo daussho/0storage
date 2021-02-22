@@ -84,31 +84,31 @@ Update all, didn't need id, but all data need `_id`.
 
 ## Implementation list
 
--  [x] insert
+- [x] insert
 
--  [x] insertMany
+- [x] insertMany
 
--  [x] select
+- [x] select
 
--  [x] where
+- [x] where
 
--  [x] skip
+- [x] skip
 
--  [x] orderBy
+- [x] orderBy
 
 - [ ] groupBy
 
 - [ ] having
 
--  [x] search
+- [x] search
 
--  [x] distinct
+- [x] distinct
 
--  [x] join (One table join)
+- [x] join (One table join)
 
-- [ ] updateById
+- [x] updateById
 
-- [ ] update
+- [x] update
 
 - [ ] removeFieldsById
 
