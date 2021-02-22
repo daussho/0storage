@@ -16,7 +16,7 @@ Basic required parameter, must be sent on every request:
        "operation":"query_builder"
     }
     
-    Accepted parameter for operation: insert, query_builder.
+    Accepted parameter for operation: insert, query_builder, update.
 
 ## Insert
 
@@ -52,6 +52,34 @@ Select column as alias.
     
     {
 	    "select":  {"alias":"original"},
+    }
+
+## Update
+**Warning, all updated field can't be reverted, please be cautious when selecting table name and field to update.**
+
+Update by id, id must reference to document `_id`.
+
+    {
+        "operation": "update",
+        "id": 1,
+        "update": "update_by_id",
+        "data": {
+            "field": "update here"
+        }
+    }
+
+Update all, didn't need id, but all data need `_id`.
+
+    {
+        "operation": "update",
+        "id": 0,
+        "update": "update",
+        "data": [
+            {
+                "_id": 1
+                "field": "update here"
+            }
+        ]
     }
 
 ## Implementation list
