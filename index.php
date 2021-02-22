@@ -4,7 +4,6 @@ require __DIR__ . '/vendor/autoload.php';
 
 require_once("src/Autoloader.php");
 
-use SleekDB\Store;
 use helpers\GlobalHelper;
 use helpers\SleekDBHelper;
 

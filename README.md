@@ -4,8 +4,9 @@
 A (not really) rest interface for [SleekDB](https://github.com/rakibtg/SleekDB). Built for who that want to rapid prototyping without doing backend.
 
 ## How to use
+All operation use `POST request`.
 
-Basic required parameter:
+Basic required parameter, must be sent on every request:
 
     Example:
     
@@ -19,11 +20,9 @@ Basic required parameter:
 
 ## Insert
 
-	Example:
+Add below parameter to the basic required parameter.
 	
     {
-       "app_name":"your_app_name",
-       "table":"your_table_name",
        "operation":"insert",
        "data":[
 	       {
@@ -38,6 +37,22 @@ Basic required parameter:
     }
 	
 If you put `array of object` in `data`, it will use `insertMany()`, otherwise it will use `insert()`
+
+## Query Builder
+All parameter listed must be sent even when empty.
+
+### select
+Select column.
+
+    {
+	    "select":  ["name"],
+    }
+
+Select column as alias.
+    
+    {
+	    "select":  {"alias":"original"},
+    }
 
 ## Implementation list
 
