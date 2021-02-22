@@ -24,7 +24,7 @@ class SleekDBHelper {
         return new Store(self::getTableName($query['app_name'], $query['table']), self::DATA_DIR, self::DB_CONFIG);
     }
     
-    static function insertParser(array $param)
+    public static function insertParser(array $param)
     {
         $store = self::getStore($param);
         $res = "";
@@ -36,7 +36,7 @@ class SleekDBHelper {
         return $res;
     }
 
-    static function queryBuilder($param)
+    public static function queryBuilder($param)
     {
         $store = self::getStore($param);
         $builder = $store->createQueryBuilder();
@@ -96,6 +96,16 @@ class SleekDBHelper {
             ->fetch();
         
         return $data;
+    }
+
+    public static function update($param)
+    {
+        $store = self::getStore($param);
+        if ($param['update'] == "update"){
+            return ["success" => $store->update($param['data'])];
+        } else if ($param['update'] == "update_by_id") {
+            return $store->updateById($param['id'], $param['data']);
+        }
     }
     
     static function isAssoc(array $arr)
