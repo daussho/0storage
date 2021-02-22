@@ -1,5 +1,5 @@
 # RestDB
-A rest interface for [SleekDB](https://github.com/rakibtg/SleekDB)
+A (not really) rest interface for [SleekDB](https://github.com/rakibtg/SleekDB)
 
 ## Implementation list
 - [x] insert
@@ -10,3 +10,4 @@ A rest interface for [SleekDB](https://github.com/rakibtg/SleekDB)
 - [x] orderBy
 - [ ] groupBy
 - [ ] having
+- [x] search

@@ -25,6 +25,10 @@ class SleekDBHelper {
         if (!empty($param['where'])){
             $builder = $builder->where([$param['where']]);
         }
+
+        if (!empty($param['search'])){
+            $builder = $builder->search($param['search']['fields'], $param['search']['keyword']);
+        }
         
         if (!empty($param['skip'])){
             $builder = $builder->skip($param['skip']);
