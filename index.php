@@ -30,7 +30,8 @@ $requiredQuery = [
     "app_name",
     "table",
     "operation",
-    "data"
+    "data",
+    
 ];
 
 $query = file_get_contents('php://input');
@@ -55,6 +56,8 @@ $store = new \SleekDB\Store($tableName, $dataDir, $configuration);
 
 if ($query['operation'] == "insert"){
     $response[] = SleekDBHelper::insertParser($store, $query['data']);
+} else if ($query['operation'] == "query_builder"){
+    $response[] = SleekDBHelper::queryBuilder($store, $query);
 }
 
 GlobalHelper::returnJSON($response);

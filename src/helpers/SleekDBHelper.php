@@ -13,6 +13,18 @@ class SleekDBHelper {
         }
         return $res;
     }
+
+    static function queryBuilder(\SleekDB\Store $store, $param)
+    {
+        $builder = $store->createQueryBuilder();
+        
+        if (!empty($param['where'])){
+            $builder = $builder->where([$param['where']]);
+        }
+
+        $data = $builder->getQuery()->fetch();
+        return $data;
+    }
     
     static function isAssoc(array $arr)
     {
