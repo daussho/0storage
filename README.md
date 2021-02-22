@@ -37,8 +37,7 @@ Basic required parameter:
        ]
     }
 	
-	
-
+If you put `array of object` in `data`, it will use `insertMany()`, otherwise it will use `insert()`
 
 ## Implementation list
 
