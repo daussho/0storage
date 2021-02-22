@@ -6,6 +6,7 @@ A (not really) rest interface for [SleekDB](https://github.com/rakibtg/SleekDB).
 ## How to use
 1. Clone this repository on your local machine
 2. Run on php webserver
+
 `php -S localhost:port`
 
 All operation use `HTTP POST request`.
