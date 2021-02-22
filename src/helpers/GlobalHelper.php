@@ -3,7 +3,7 @@
 namespace helpers;
 
 class GlobalHelper {
-    static function validateSchema($requiredFields, $post)
+    public static function validateSchema($requiredFields, $post)
     {
         $validation = [];
 
@@ -18,10 +18,29 @@ class GlobalHelper {
         return $validation;
     }
 
-    static function returnJSON($data, $statusCode = 200)
+    public static function returnJSON($data, $statusCode = 200)
     {
         header("Content-Type: application/json");
         http_response_code($statusCode);
         echo json_encode($data);
+    }
+
+    /**
+     * send a log message to the STDOUT stream.
+     *
+     * @param array<int, mixed> $args
+     *
+     * @return void
+     */
+    public static function log(...$args): void {
+        foreach ($args as $arg) {
+            if (is_object($arg) || is_array($arg) || is_resource($arg)) {
+                $output = print_r($arg, true);
+            } else {
+                $output = (string) $arg;
+            }
+
+            fwrite(STDOUT, $output . "\n");
+         }
     }
 }

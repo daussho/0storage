@@ -20,12 +20,7 @@ if ($requestMethod !== "POST") {
 
 $response = [];
 
-$configuration = [
-    "auto_cache" => true,
-    "cache_lifetime" => null,
-    "timeout" => 120,
-    "primary_key" => "_id"
-];
+
 
 $requiredParam = [
     "app_name",
@@ -50,15 +45,15 @@ if (!empty($errSchema)) {
     return;
 }
 
-$tableName = hash("crc32", $query['app_name']) . "_" . $query['app_name']. "_" . $query['table'];
-$store = new Store($tableName, $dataDir, $configuration);
+// $tableName = hash("crc32", $query['app_name']) . "_" . $query['app_name']. "_" . $query['table'];
+// $store = new Store($tableName, $dataDir, $configuration);
 
 $checkSchema = [];
 if ($query['operation'] == "insert"){
     $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, []), $query);
     
     if (empty($checkSchema)){
-        $response[] = SleekDBHelper::insertParser($store, $query['data']);
+        $response[] = SleekDBHelper::insertParser($query);
     }
 } else if ($query['operation'] == "query_builder"){
     $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, [
@@ -70,7 +65,7 @@ if ($query['operation'] == "insert"){
     ]), $query);
     
     if (empty($checkSchema)){
-        $response[] = SleekDBHelper::queryBuilder($store, $query);
+        $response[] = SleekDBHelper::queryBuilder($query);
     }
 }
 
