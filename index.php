@@ -27,6 +27,7 @@ $configuration = [
 ];
 
 $requiredQuery = [
+    "app_name",
     "table",
     "operation",
     "data"
@@ -49,7 +50,8 @@ if (!empty($errSchema)) {
     return;
 }
 
-$store = new \SleekDB\Store($query['table'], $dataDir, $configuration);
+$tableName = hash("crc32", $query['app_name']) . "_" . $query['table'];
+$store = new \SleekDB\Store($tableName, $dataDir, $configuration);
 
 if ($query['operation'] == "insert"){
     $response[] = SleekDBHelper::insertParser($store, $query['data']);
