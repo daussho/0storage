@@ -77,3 +77,13 @@ Select column as alias.
 -  [x] distinct
 
 -  [x] join (One table join)
+
+- [ ] updateById
+
+- [ ] update
+
+- [ ] removeFieldsById
+
+- [ ] deleteBy
+
+- [ ] deleteById
