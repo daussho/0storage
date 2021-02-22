@@ -50,7 +50,7 @@ if (!empty($errSchema)) {
     return;
 }
 
-$tableName = hash("crc32", $query['app_name']) . "_" . $query['table'];
+$tableName = hash("crc32", $query['app_name']) . "_" . $query['app_name']. "_" . $query['table'];
 $store = new Store($tableName, $dataDir, $configuration);
 
 $checkSchema = [];

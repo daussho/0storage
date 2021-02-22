@@ -33,6 +33,10 @@ class SleekDBHelper {
         if (!empty($param['search'])){
             $builder = $builder->search($param['search']['fields'], $param['search']['keyword']);
         }
+
+        if (!empty($param['distinct'])){
+            $builder = $builder->distinct($param['distinct']);
+        }
         
         if (!empty($param['skip'])){
             $builder = $builder->skip($param['skip']);
