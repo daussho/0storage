@@ -3,7 +3,7 @@
 namespace helpers;
 
 class GlobalHelper {
-    static function validatePost($requiredFields, $post)
+    static function validateSchema($requiredFields, $post)
     {
         $validation = [];
 

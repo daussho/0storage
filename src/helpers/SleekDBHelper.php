@@ -2,8 +2,12 @@
 
 namespace helpers;
 
+use SleekDB\Store;
+
 class SleekDBHelper {
-    static function insertParser(\SleekDB\Store $sleekDB, array $data)
+    const MAX_QUERY_CACHE = 60 * 60;
+
+    static function insertParser(Store $sleekDB, array $data)
     {
         $res = "";
         if (self::isAssoc($data)){
@@ -14,7 +18,7 @@ class SleekDBHelper {
         return $res;
     }
 
-    static function queryBuilder(\SleekDB\Store $store, $param)
+    static function queryBuilder(Store $store, $param)
     {
         $builder = $store->createQueryBuilder();
 
@@ -38,7 +42,11 @@ class SleekDBHelper {
             $builder = $builder->orderBy($param['order_by']);
         }
 
-        $data = $builder->getQuery()->fetch();
+        $data = $builder
+            ->useCache(self::MAX_QUERY_CACHE)
+            ->getQuery()
+            ->fetch();
+        
         return $data;
     }
     

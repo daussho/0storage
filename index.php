@@ -4,6 +4,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 require_once("src/Autoloader.php");
 
+use SleekDB\Store;
 use helpers\GlobalHelper;
 use helpers\SleekDBHelper;
 
@@ -26,13 +27,10 @@ $configuration = [
     "primary_key" => "_id"
 ];
 
-$requiredQuery = [
+$requiredParam = [
     "app_name",
     "table",
     "operation",
-    "data",
-    "select",
-    "where"
 ];
 
 $query = file_get_contents('php://input');
@@ -43,7 +41,7 @@ if (empty($query)){
     $query = json_decode($query, true);
 }
 
-$errSchema = GlobalHelper::validatePost($requiredQuery, $query);
+$errSchema = GlobalHelper::validateSchema($requiredParam, $query);
 
 if (!empty($errSchema)) {
     GlobalHelper::returnJSON([
@@ -53,12 +51,34 @@ if (!empty($errSchema)) {
 }
 
 $tableName = hash("crc32", $query['app_name']) . "_" . $query['table'];
-$store = new \SleekDB\Store($tableName, $dataDir, $configuration);
+$store = new Store($tableName, $dataDir, $configuration);
 
+$checkSchema = [];
 if ($query['operation'] == "insert"){
-    $response[] = SleekDBHelper::insertParser($store, $query['data']);
+    $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, []), $query);
+    
+    if (empty($checkSchema)){
+        $response[] = SleekDBHelper::insertParser($store, $query['data']);
+    }
 } else if ($query['operation'] == "query_builder"){
-    $response[] = SleekDBHelper::queryBuilder($store, $query);
+    $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, [
+        "select",
+        "where",
+        "search",
+        "skip",
+        "order_by"
+    ]), $query);
+    
+    if (empty($checkSchema)){
+        $response[] = SleekDBHelper::queryBuilder($store, $query);
+    }
+}
+
+if (!empty($checkSchema)){
+    GlobalHelper::returnJSON([
+        "error" => $checkSchema
+    ], 400);
+    return;
 }
 
 GlobalHelper::returnJSON($response);
