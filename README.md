@@ -21,7 +21,7 @@ Basic required parameter, must be sent on every request.
        "operation":"query_builder"
     }
     
-    Accepted parameter for operation: insert, query_builder, update.
+Accepted parameter for operation: `insert, query_builder, update`.
 
 ## Insert
 
