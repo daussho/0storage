@@ -4,9 +4,13 @@
 A (not really) rest interface for [SleekDB](https://github.com/rakibtg/SleekDB). Built for who that want to rapid prototyping without doing backend.
 
 ## How to use
-All operation use `POST request`.
+1. Clone this repository on your local machine
+2. Run on php webserver
+`php -S localhost:port`
 
-Basic required parameter, must be sent on every request:
+All operation use `HTTP POST request`.
+
+Basic required parameter, must be sent on every request.
 
     Example:
     
@@ -57,6 +61,7 @@ Select column as alias.
 ## Update
 **Warning, all updated field can't be reverted, please be cautious when selecting table name and field to update.**
 
+### Update by id
 Update by id, id must reference to document `_id`.
 
     {
@@ -68,7 +73,8 @@ Update by id, id must reference to document `_id`.
         }
     }
 
-Update all, didn't need id, but all data need `_id`.
+### update
+Update all listed `_id`, didn't need id, but all data need `_id`.
 
     {
         "operation": "update",
