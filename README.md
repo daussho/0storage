@@ -44,7 +44,6 @@ Add below parameter to the basic required parameter.
 If you put `array of object` in `data`, it will use `insertMany()`, otherwise it will use `insert()`
 
 ## Query Builder
-All parameter listed must be sent even when empty.
 
 ### select
 Select column.
@@ -56,7 +55,9 @@ Select column.
 Select column as alias.
     
     {
-	    "select":  {"alias":"original"},
+	    "select":  {
+            "alias": "original"
+        }
     }
 
 ## Update
@@ -94,6 +95,14 @@ Update all listed `_id`, didn't need id, but all data need `_id`.
 - [x] insert
 
 - [x] insertMany
+
+- [ ] findAll
+
+- [ ] findById
+
+- [ ] findBy
+
+- [ ] findOneBy
 
 - [x] select
 

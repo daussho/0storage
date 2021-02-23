@@ -54,6 +54,14 @@ if ($query['operation'] == "insert"){
     if (empty($checkSchema)){
         $response = SleekDBHelper::insertParser($query);
     }
+} else if ($query['operation'] == "find"){
+    $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, [
+        "find"
+    ]), $query);
+
+    if (empty($checkSchema)){
+        $response = SleekDBHelper::find($query);
+    }
 } else if ($query['operation'] == "update"){
     $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, [
         "update",
@@ -66,11 +74,11 @@ if ($query['operation'] == "insert"){
     }
 } else if ($query['operation'] == "query_builder"){
     $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, [
-        "select",
-        "where",
-        "search",
-        "skip",
-        "order_by"
+        // "select",
+        // "where",
+        // "search",
+        // "skip",
+        // "order_by"
     ]), $query);
     
     if (empty($checkSchema)){

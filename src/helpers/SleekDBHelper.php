@@ -36,6 +36,22 @@ class SleekDBHelper {
         return $res;
     }
 
+    public static function find(array $param)
+    {
+        $store = self::getStore($param);
+        $res = [];
+        if ($param['find'] == "find_all"){
+            $res = $store->findAll();
+        } else if ($param['find'] == "find_by_id"){
+            $res = $store->findById($param['id']);
+        } else if ($param['find'] == "find_by"){
+            $res = $store->findBy($param['criteria'], $param['order'], $param['limit'], $param['offset']);
+        } else if ($param['find'] == "find_one_by"){
+            $res = $store->findOneBy($param['criteria']);
+        }
+        return $res;
+    }
+
     public static function queryBuilder($param)
     {
         $store = self::getStore($param);
@@ -83,12 +99,6 @@ class SleekDBHelper {
         if (!empty($param['order_by'])){
             $builder = $builder->orderBy($param['order_by']);
         }
-
-        $joinStore = new Store(
-            self::getTableName($param['app_name'], $param['join']['table']),
-            self::DATA_DIR, 
-            self::DB_CONFIG
-        );
 
         $data = $builder
             ->disableCache()
