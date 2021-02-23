@@ -1,14 +1,16 @@
 <?php
-class Autoloader {
-    static public function loader($className) {
+class Autoloader
+{
+    public static function loader($className)
+    {
         $filename = "src/" . str_replace("\\", '/', $className) . ".php";
         if (file_exists($filename)) {
-            include($filename);
+            include $filename;
             if (class_exists($className)) {
-                return TRUE;
+                return true;
             }
         }
-        return FALSE;
+        return false;
     }
 }
 spl_autoload_register('Autoloader::loader');

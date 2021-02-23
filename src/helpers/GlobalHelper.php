@@ -5,24 +5,23 @@ namespace helpers;
 /**
  * Global helper
  */
-class GlobalHelper {
-    
+class GlobalHelper
+{
+
     /**
      * Validate required field
-     * 
+     *
      * @param array $requiredFields
      * @param array $post
-     * 
+     *
      * @return array
      */
-    public static function validateSchema(array $requiredFields, array $post) : array
+    public static function validateSchema(array $requiredFields, array $post): array
     {
         $validation = [];
 
-        foreach($requiredFields as $required => $key)
-        {
-            if(!array_key_exists($key, $post))
-            {
+        foreach ($requiredFields as $required => $key) {
+            if (!array_key_exists($key, $post)) {
                 $validation['required'][] = $key;
             }
         }
@@ -32,13 +31,13 @@ class GlobalHelper {
 
     /**
      * Send HTTP JSON response
-     * 
+     *
      * @param mixed $data
      * @param int $statusCode
-     * 
+     *
      * @return void
      */
-    public static function returnJSON($data, $statusCode = 200) : void
+    public static function returnJSON($data, $statusCode = 200): void
     {
         header("Content-Type: application/json");
         http_response_code($statusCode);
@@ -52,7 +51,8 @@ class GlobalHelper {
      *
      * @return void
      */
-    public static function log(...$args): void {
+    public static function log(...$args): void
+    {
         foreach ($args as $arg) {
             if (is_object($arg) || is_array($arg) || is_resource($arg)) {
                 $output = print_r($arg, true);
@@ -61,6 +61,6 @@ class GlobalHelper {
             }
 
             fwrite(STDOUT, $output . "\n");
-         }
+        }
     }
 }
