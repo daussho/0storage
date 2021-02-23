@@ -2,8 +2,20 @@
 
 namespace helpers;
 
+/**
+ * Global helper
+ */
 class GlobalHelper {
-    public static function validateSchema($requiredFields, $post)
+    
+    /**
+     * Validate required field
+     * 
+     * @param array $requiredFields
+     * @param array $post
+     * 
+     * @return array
+     */
+    public static function validateSchema(array $requiredFields, array $post) : array
     {
         $validation = [];
 
@@ -18,7 +30,15 @@ class GlobalHelper {
         return $validation;
     }
 
-    public static function returnJSON($data, $statusCode = 200)
+    /**
+     * Send HTTP JSON response
+     * 
+     * @param mixed $data
+     * @param int $statusCode
+     * 
+     * @return void
+     */
+    public static function returnJSON($data, $statusCode = 200) : void
     {
         header("Content-Type: application/json");
         http_response_code($statusCode);
