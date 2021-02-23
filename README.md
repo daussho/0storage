@@ -96,13 +96,13 @@ Update all listed `_id`, didn't need id, but all data need `_id`.
 
 - [x] insertMany
 
-- [ ] findAll
+- [x] findAll
 
-- [ ] findById
+- [x] findById
 
-- [ ] findBy
+- [x] findBy
 
-- [ ] findOneBy
+- [x] findOneBy
 
 - [x] select
 
