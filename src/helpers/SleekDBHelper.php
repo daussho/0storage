@@ -18,20 +18,36 @@ class SleekDBHelper
         "primary_key" => "_id",
     ];
 
+    /**
+     * @param string $appName
+     * @param string $tableName
+     *
+     * @return string
+     */
     private static function getTableName(string $appName, string $tableName): string
     {
         return hash("crc32", $appName) . "_" . $appName . "_" . $tableName;
     }
 
-    private static function getStore($query)
+    /**
+     * @param array $query
+     *
+     * @return Store
+     */
+    private static function getStore(array $query): Store
     {
         return new Store(self::getTableName($query['app_name'], $query['table']), self::DATA_DIR, self::DB_CONFIG);
     }
 
-    public static function insertParser(array $param)
+    /**
+     * @param array $param
+     *
+     * @return array
+     */
+    public static function insertParser(array $param): array
     {
         $store = self::getStore($param);
-        $res = "";
+        $res = [];
         if (self::isAssoc($param['data'])) {
             $res = $store->insert($param['data']);
         } else {
@@ -40,7 +56,12 @@ class SleekDBHelper
         return $res;
     }
 
-    public static function find(array $param)
+    /**
+     * @param array $param
+     *
+     * @return array
+     */
+    public static function find(array $param): array
     {
         $store = self::getStore($param);
         $res = [];
@@ -56,7 +77,12 @@ class SleekDBHelper
         return $res;
     }
 
-    public static function queryBuilder($param)
+    /**
+     * @param array $param
+     *
+     * @return array
+     */
+    public static function queryBuilder(array $param): array
     {
         $store = self::getStore($param);
         $builder = $store->createQueryBuilder();
@@ -112,7 +138,12 @@ class SleekDBHelper
         return $data;
     }
 
-    public static function update($param)
+    /**
+     * @param array $param
+     *
+     * @return array
+     */
+    public static function update(array $param): array
     {
         $store = self::getStore($param);
         if ($param['update'] == "update") {
@@ -122,7 +153,12 @@ class SleekDBHelper
         }
     }
 
-    public static function isAssoc(array $arr)
+    /**
+     * @param array $arr
+     *
+     * @return bool
+     */
+    public static function isAssoc(array $arr): bool
     {
         if (array() === $arr) {
             return false;
