@@ -8,8 +8,11 @@ $router = new AltoRouter();
 
 // Router list
 
-$router->map('GET', '/', 'App\Controllers\QueryController::fetch', 'fetch');
-$router->map('POST', '/', 'App\Controllers\QueryController::insert', 'insert');
+$router->map('GET', '/fetch', 'App\Controllers\QueryController::fetch', 'fetch');
+$router->map('GET', '/query', 'App\Controllers\QueryController::query', 'query');
+$router->map('POST', '/insert', 'App\Controllers\QueryController::insert', 'insert');
+$router->map('PUT', '/update', 'App\Controllers\QueryController::update', 'update');
+$router->map('DELETE', '/delete', 'App\Controllers\QueryController::update', 'delete');
 
 // match current request url
 $match = $router->match();
