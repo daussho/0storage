@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4bc443689b2004010eaefcb9e49738b1",
+    "content-hash": "3446a86b8c344195c2f9084702c2594c",
     "packages": [
         {
             "name": "rakibtg/sleekdb",
-            "version": "2.7",
+            "version": "2.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rakibtg/SleekDB.git",
-                "reference": "4bcd25366253c2f1ec6cc56da4b2c6210ffa48d0"
+                "reference": "d139980a68e0c28f960ffd40199c988ea24415fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rakibtg/SleekDB/zipball/4bcd25366253c2f1ec6cc56da4b2c6210ffa48d0",
-                "reference": "4bcd25366253c2f1ec6cc56da4b2c6210ffa48d0",
+                "url": "https://api.github.com/repos/rakibtg/SleekDB/zipball/d139980a68e0c28f960ffd40199c988ea24415fe",
+                "reference": "d139980a68e0c28f960ffd40199c988ea24415fe",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,7 @@
                 "php",
                 "rest"
             ],
-            "time": "2021-02-22T05:22:28+00:00"
+            "time": "2021-02-24T12:20:35+00:00"
         }
     ],
     "packages-dev": [],

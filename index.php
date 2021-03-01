@@ -2,10 +2,10 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-require_once "src/Autoloader.php";
+// require_once "src/Autoloader.php";
 
-use helpers\GlobalHelper;
-use helpers\SleekDBHelper;
+use App\Helpers\GlobalHelper;
+use App\Helpers\SleekDBHelper;
 
 $dataDir = __DIR__ . "/mydb";
 
@@ -14,7 +14,7 @@ if ($requestMethod !== "POST") {
     GlobalHelper::returnJSON([
         "error" => "Invalid request",
     ], 400);
-    return;
+    return null;
 }
 
 $response = [];

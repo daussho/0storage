@@ -1,6 +1,6 @@
 <?php
 
-namespace helpers;
+namespace App\Helpers;
 
 use SleekDB\Store;
 
