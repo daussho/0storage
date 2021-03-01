@@ -45,6 +45,24 @@ class GlobalHelper
     }
 
     /**
+     * Get query body
+     *
+     * @return array
+     */
+    public static function getBody(): array
+    {
+        $query = file_get_contents('php://input');
+
+        if (empty($query)) {
+            $query = [];
+        } else {
+            $query = json_decode($query, true);
+        }
+
+        return $query;
+    }
+
+    /**
      * send a log message to the STDOUT stream.
      *
      * @param array<int, mixed> $args

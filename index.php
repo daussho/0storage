@@ -8,20 +8,25 @@ $router = new AltoRouter();
 
 // Router list
 
-$router->map('GET', '/', function () {
-    GlobalHelper::returnJSON([
-        "error" => "Invalid request",
-    ], 400);
-}, 'home');
-
-$router->map('POST', '/', 'App\Controllers\QueryController::index', 'query');
+$router->map('GET', '/', 'App\Controllers\QueryController::fetch', 'fetch');
+$router->map('POST', '/', 'App\Controllers\QueryController::insert', 'insert');
 
 // match current request url
 $match = $router->match();
 
 // call closure or throw 404 status
 if (is_array($match) && is_callable($match['target'])) {
-    call_user_func_array($match['target'], $match['params']);
+    list($controller, $action) = explode('::', $match['target']);
+    if (is_callable(array($controller, $action))) {
+        $obj = new $controller();
+        call_user_func_array(array($obj, $action), array($match['params']));
+    } else {
+        // here your routes are wrong.
+        // Throw an exception in debug, send a  500 error in production
+        GlobalHelper::returnJSON([
+            "error" => "Method not found",
+        ], 500);
+    }
 } else {
     // no route was matched
     GlobalHelper::returnJSON([

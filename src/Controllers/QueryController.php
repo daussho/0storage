@@ -7,7 +7,14 @@ use App\Helpers\SleekDBHelper;
 
 class QueryController
 {
-    public function index()
+    private $query;
+
+    public function __construct()
+    {
+        $this->query = GlobalHelper::getBody();
+    }
+
+    public function fetch()
     {
         $response = [];
 
@@ -17,15 +24,7 @@ class QueryController
             "operation",
         ];
 
-        $query = file_get_contents('php://input');
-
-        if (empty($query)) {
-            $query = [];
-        } else {
-            $query = json_decode($query, true);
-        }
-
-        $errSchema = GlobalHelper::validateSchema($requiredParam, $query);
+        $errSchema = GlobalHelper::validateSchema($requiredParam, $this->query);
 
         if (!empty($errSchema)) {
             GlobalHelper::returnJSON([
@@ -35,41 +34,13 @@ class QueryController
         }
 
         $checkSchema = [];
-        if ($query['operation'] == "insert") {
-            $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, []), $query);
-
-            if (empty($checkSchema)) {
-                $response = SleekDBHelper::insertParser($query);
-            }
-        } else if ($query['operation'] == "find") {
+        if ($this->query['operation'] == "find") {
             $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, [
                 "find",
-            ]), $query);
+            ]), $this->query);
 
             if (empty($checkSchema)) {
-                $response = SleekDBHelper::find($query);
-            }
-        } else if ($query['operation'] == "update") {
-            $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, [
-                "update",
-                "id",
-                "data",
-            ]), $query);
-
-            if (empty($checkSchema)) {
-                $response = SleekDBHelper::update($query);
-            }
-        } else if ($query['operation'] == "query_builder") {
-            $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, [
-                // "select",
-                // "where",
-                // "search",
-                // "skip",
-                // "order_by"
-            ]), $query);
-
-            if (empty($checkSchema)) {
-                $response = SleekDBHelper::queryBuilder($query);
+                $response = SleekDBHelper::find($this->query);
             }
         }
 
@@ -81,5 +52,53 @@ class QueryController
         }
 
         GlobalHelper::returnJSON($response);
+    }
+
+    public function insert()
+    {
+        if ($this->query['operation'] == "insert") {
+            $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, []), $this->query);
+
+            if (empty($checkSchema)) {
+                $response = SleekDBHelper::insertParser($this->query);
+            }
+        }
+    }
+
+    public function update()
+    {
+        if ($this->query['operation'] == "update") {
+            $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, [
+                "update",
+                "id",
+                "data",
+            ]), $this->query);
+
+            if (empty($checkSchema)) {
+                $response = SleekDBHelper::update($this->query);
+            }
+        }
+    }
+
+    public function delete()
+    {
+
+    }
+
+    public function query()
+    {
+        if ($this->query['operation'] == "query_builder") {
+            $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, [
+                // "select",
+                // "where",
+                // "search",
+                // "skip",
+                // "order_by"
+            ]), $this->query);
+
+            if (empty($checkSchema)) {
+                $response = SleekDBHelper::queryBuilder($this->query);
+            }
+        }
     }
 }
