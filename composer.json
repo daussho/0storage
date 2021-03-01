@@ -8,7 +8,8 @@
     }
   },
   "require": {
-    "rakibtg/sleekdb": "^2.8"
+    "rakibtg/sleekdb": "^2.8",
+    "altorouter/altorouter": "^2.0"
   },
   "license": "MIT",
   "authors": [
