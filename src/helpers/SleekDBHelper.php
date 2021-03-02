@@ -26,7 +26,7 @@ class SleekDBHelper
      */
     private static function getTableName(string $appName, string $tableName): string
     {
-        return hash("crc32", $appName) . "_" . $appName . "_" . $tableName;
+        return hash($_ENV['DB_HASH'], $appName) . "_" . $appName . "_" . $tableName;
     }
 
     /**

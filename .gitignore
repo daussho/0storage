@@ -1,3 +1,4 @@
 mydb/*
 !mydb/.gitkeep
 /vendor/
+.env

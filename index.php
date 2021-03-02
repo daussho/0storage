@@ -4,6 +4,10 @@ require __DIR__ . '/vendor/autoload.php';
 
 use App\Helpers\GlobalHelper;
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+$dotenv->required(['DB_HASH'])->notEmpty();
+
 $router = new AltoRouter();
 
 // Router list
