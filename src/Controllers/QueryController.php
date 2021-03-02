@@ -27,35 +27,50 @@ class QueryController extends RestController
 
     public function fetch()
     {
-        $response = SleekDBHelper::find($this->getQuery());
+        // $response = SleekDBHelper::find($this->getQuery());
 
-        GlobalHelper::returnJSON($response);
+        $param = $this->getQuery();
+        $store = SleekDBHelper::getStore($param);
+
+        switch ($param['operation']) {
+            case "find_all":
+                $data = $store->findAll();
+                break;
+            case "find_by_id":
+                $data = $store->findById(
+                    $param['find_by_id']['id']
+                );
+                break;
+            case "find_by":
+                $data = $store->findBy(
+                    $param['find_by']['criteria'],
+                    $param['find_by']['order_by'],
+                    $param['find_by']['limit'],
+                    $param['find_by']['offset'],
+                );
+                break;
+            case "find_one_by":
+                $data = $store->findOneBy(
+                    $param['find_one_by']['criteria'],
+                );
+                break;
+        }
+
+        $this->returnJSON($data);
     }
 
     public function insert()
     {
-        if ($this->query['operation'] == "insert") {
-            $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, []), $this->query);
+        $response = SleekDBHelper::insertParser($this->getQuery());
 
-            if (empty($checkSchema)) {
-                $response = SleekDBHelper::insertParser($this->query);
-            }
-        }
+        $this->returnJSON($response);
     }
 
     public function update()
     {
-        if ($this->query['operation'] == "update") {
-            $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, [
-                "update",
-                "id",
-                "data",
-            ]), $this->query);
+        $response = SleekDBHelper::update($this->getQuery());
 
-            if (empty($checkSchema)) {
-                $response = SleekDBHelper::update($this->query);
-            }
-        }
+        $this->returnJSON($response);
     }
 
     public function delete()
@@ -65,18 +80,8 @@ class QueryController extends RestController
 
     public function query()
     {
-        if ($this->query['operation'] == "query_builder") {
-            $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, [
-                // "select",
-                // "where",
-                // "search",
-                // "skip",
-                // "order_by"
-            ]), $this->query);
+        $response = SleekDBHelper::queryBuilder($this->getQuery());
 
-            if (empty($checkSchema)) {
-                $response = SleekDBHelper::queryBuilder($this->query);
-            }
-        }
+        $this->returnJSON($response);
     }
 }

@@ -34,7 +34,7 @@ class SleekDBHelper
      *
      * @return Store
      */
-    private static function getStore(array $query): Store
+    public static function getStore(array $query): Store
     {
         return new Store(self::getTableName($query['app_name'], $query['table']), self::DATA_DIR, self::DB_CONFIG);
     }
@@ -53,43 +53,6 @@ class SleekDBHelper
         } else {
             $res = $store->insertMany($param['data']);
         }
-        return $res;
-    }
-
-    /**
-     * @param array $param
-     *
-     * @return array
-     */
-    public static function find(array $param): array
-    {
-        $store = self::getStore($param);
-        $res = [];
-
-        switch ($param['operation']) {
-            case "find_all":
-                $res = $store->findAll();
-                break;
-            case "find_by_id":
-                $res = $store->findById(
-                    $param['find_by_id']['id']
-                );
-                break;
-            case "find_by":
-                $res = $store->findBy(
-                    $param['find_by']['criteria'],
-                    $param['find_by']['order_by'],
-                    $param['find_by']['limit'],
-                    $param['find_by']['offset'],
-                );
-                break;
-            case "find_one_by":
-                $res = $store->findOneBy(
-                    $param['find_one_by']['criteria'],
-                );
-                break;
-        }
-
         return $res;
     }
 
