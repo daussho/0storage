@@ -17,12 +17,12 @@ class QueryController extends RestController
 
         $errSchema = GlobalHelper::validateSchema($requiredParam, $this->getQuery());
 
-        if (!empty($errSchema)) {
-            GlobalHelper::returnJSON([
-                "error" => $errSchema,
-            ], 400);
-            die(1);
-        }
+        // if (!empty($errSchema)) {
+        //     $this->returnJSON([
+        //         "error" => $errSchema,
+        //     ], 400);
+        //     die(1);
+        // }
     }
 
     public function fetch()

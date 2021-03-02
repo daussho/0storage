@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Exceptions\ResponseException;
+
 /**
  * Global helper
  */
@@ -26,6 +28,10 @@ class GlobalHelper
             }
         }
 
+        if (!empty($validation)) {
+            throw new ResponseException("Error schema", $validation, 400);
+        }
+
         return $validation;
     }
 
@@ -36,6 +42,7 @@ class GlobalHelper
      * @param int $statusCode
      *
      * @return void
+     * @deprecated
      */
     public static function returnJSON($data, $statusCode = 200): void
     {

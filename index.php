@@ -2,6 +2,7 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+use App\Exceptions\ResponseException;
 use App\Helpers\GlobalHelper;
 
 try {
@@ -32,19 +33,25 @@ try {
         } else {
             // here your routes are wrong.
             // Throw an exception in debug, send a  500 error in production
-            GlobalHelper::returnJSON([
-                "error" => "Method not found",
-            ], 500);
+            throw new ResponseException("Method not found", [], 500);
         }
     } else {
         // no route was matched
-        GlobalHelper::returnJSON([
-            "error" => "Not found",
-        ], 404);
+        throw new ResponseException("Not found", [], 404);
     }
 
     return null;
-} catch (\Throwable $th) {
+} catch (ResponseException $e) {
+
+    GlobalHelper::returnJSON(
+        [
+            "message" => $e->getMessage(),
+            "error" => $e->errorData(),
+        ],
+        $e->errorCode()
+    );
+
+} catch (Exception $e) {
     GlobalHelper::returnJSON([
         "error" => "Failed load env",
     ], 500);
