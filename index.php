@@ -53,6 +53,6 @@ try {
 
 } catch (Exception $e) {
     GlobalHelper::returnJSON([
-        "error" => "Failed load env",
+        "message" => "Error, please contact administrator.",
     ], 500);
 }
