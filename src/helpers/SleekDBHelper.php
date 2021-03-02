@@ -65,15 +65,31 @@ class SleekDBHelper
     {
         $store = self::getStore($param);
         $res = [];
-        if ($param['find'] == "find_all") {
-            $res = $store->findAll();
-        } else if ($param['find'] == "find_by_id") {
-            $res = $store->findById($param['id']);
-        } else if ($param['find'] == "find_by") {
-            $res = $store->findBy($param['criteria'], $param['order'], $param['limit'], $param['offset']);
-        } else if ($param['find'] == "find_one_by") {
-            $res = $store->findOneBy($param['criteria']);
+
+        switch ($param['operation']) {
+            case "find_all":
+                $res = $store->findAll();
+                break;
+            case "find_by_id":
+                $res = $store->findById(
+                    $param['find_by_id']['id']
+                );
+                break;
+            case "find_by":
+                $res = $store->findBy(
+                    $param['find_by']['criteria'],
+                    $param['find_by']['order_by'],
+                    $param['find_by']['limit'],
+                    $param['find_by']['offset'],
+                );
+                break;
+            case "find_one_by":
+                $res = $store->findOneBy(
+                    $param['find_one_by']['criteria'],
+                );
+                break;
         }
+
         return $res;
     }
 

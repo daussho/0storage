@@ -7,12 +7,13 @@ use App\Helpers\GlobalHelper;
 $router = new AltoRouter();
 
 // Router list
-
-$router->map('GET', '/fetch', 'App\Controllers\QueryController::fetch', 'fetch');
-$router->map('GET', '/query', 'App\Controllers\QueryController::query', 'query');
-$router->map('POST', '/insert', 'App\Controllers\QueryController::insert', 'insert');
-$router->map('PUT', '/update', 'App\Controllers\QueryController::update', 'update');
-$router->map('DELETE', '/delete', 'App\Controllers\QueryController::update', 'delete');
+$router->addRoutes([
+    ['GET', '/fetch', 'App\Controllers\QueryController::fetch', 'fetch'],
+    ['GET', '/query', 'App\Controllers\QueryController::query', 'query'],
+    ['POST', '/insert', 'App\Controllers\QueryController::insert', 'insert'],
+    ['PUT', '/update', 'App\Controllers\QueryController::update', 'update'],
+    ['DELETE', '/delete', 'App\Controllers\QueryController::update', 'delete'],
+]);
 
 // match current request url
 $match = $router->match();

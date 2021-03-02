@@ -5,51 +5,29 @@ namespace App\Controllers;
 use App\Helpers\GlobalHelper;
 use App\Helpers\SleekDBHelper;
 
-class QueryController
+class QueryController extends RestController
 {
-    private $query;
-
     public function __construct()
     {
-        $this->query = GlobalHelper::getBody();
-    }
-
-    public function fetch()
-    {
-        $response = [];
-
         $requiredParam = [
             "app_name",
             "table",
             "operation",
         ];
 
-        $errSchema = GlobalHelper::validateSchema($requiredParam, $this->query);
+        $errSchema = GlobalHelper::validateSchema($requiredParam, $this->getQuery());
 
         if (!empty($errSchema)) {
             GlobalHelper::returnJSON([
                 "error" => $errSchema,
             ], 400);
-            return;
+            die(1);
         }
+    }
 
-        $checkSchema = [];
-        if ($this->query['operation'] == "find") {
-            $checkSchema = GlobalHelper::validateSchema(array_merge($requiredParam, [
-                "find",
-            ]), $this->query);
-
-            if (empty($checkSchema)) {
-                $response = SleekDBHelper::find($this->query);
-            }
-        }
-
-        if (!empty($checkSchema)) {
-            GlobalHelper::returnJSON([
-                "error" => $checkSchema,
-            ], 400);
-            return;
-        }
+    public function fetch()
+    {
+        $response = SleekDBHelper::find($this->getQuery());
 
         GlobalHelper::returnJSON($response);
     }
