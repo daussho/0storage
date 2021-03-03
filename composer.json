@@ -10,7 +10,8 @@
   "require": {
     "rakibtg/sleekdb": "^2.8",
     "altorouter/altorouter": "^2.0",
-    "vlucas/phpdotenv": "^5.3"
+    "vlucas/phpdotenv": "^5.3",
+    "rakit/validation": "^1.4"
   },
   "license": "MIT",
   "authors": [
