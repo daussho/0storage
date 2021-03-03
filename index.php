@@ -18,6 +18,7 @@ try {
     // Router list
     $router->addRoutes([
         ['POST', '/q', 'App\Controllers\QueryController::dbQuery', 'db_query'],
+        ['GET', '/auth/login', 'App\Controllers\AuthController::login', 'auth_login'],
     ]);
 
     // match current request url
