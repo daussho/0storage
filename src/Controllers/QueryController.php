@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Exceptions\ResponseException;
 use App\Helpers\GlobalHelper;
 use App\Helpers\SleekDBHelper;
 
@@ -9,23 +10,40 @@ class QueryController extends RestController
 {
     public function __construct()
     {
-        $requiredParam = [
-            "app_name",
-            "table",
-            "operation",
-        ];
-
-        $errSchema = GlobalHelper::validateSchema($requiredParam, $this->getQuery());
-
-        // if (!empty($errSchema)) {
-        //     $this->returnJSON([
-        //         "error" => $errSchema,
-        //     ], 400);
-        //     die(1);
-        // }
+        GlobalHelper::validateSchema([
+            "app_name" => "required",
+            "table" => "required",
+            "operation" => "required",
+        ], $this->getQuery());
     }
 
-    public function fetch()
+    public function dbQuery()
+    {
+        $queryType = $_GET['query'];
+
+        switch ($queryType) {
+            case "find":
+                $this->fetch();
+                break;
+            case "insert":
+                $this->insert();
+                break;
+            case "update":
+                $this->update();
+                break;
+            case "delete":
+                $this->delete();
+                break;
+            case "query_builder":
+                $this->queryBuilder();
+                break;
+            default:
+                throw new ResponseException("Query not found", [], 400);
+                break;
+        }
+    }
+
+    private function fetch()
     {
         // $response = SleekDBHelper::find($this->getQuery());
 
@@ -36,12 +54,25 @@ class QueryController extends RestController
             case "find_all":
                 $data = $store->findAll();
                 break;
+
             case "find_by_id":
+                GlobalHelper::validateSchema([
+                    "find_by_id.id" => "required|integer",
+                ], $this->getQuery());
+
                 $data = $store->findById(
                     $param['find_by_id']['id']
                 );
                 break;
+
             case "find_by":
+                GlobalHelper::validateSchema([
+                    "find_by.criteria" => "required|array",
+                    "find_by.order_by" => "required",
+                    "find_by.limit" => "required|integer",
+                    "find_by.offset" => "required|integer",
+                ], $this->getQuery());
+
                 $data = $store->findBy(
                     $param['find_by']['criteria'],
                     $param['find_by']['order_by'],
@@ -49,7 +80,12 @@ class QueryController extends RestController
                     $param['find_by']['offset'],
                 );
                 break;
+
             case "find_one_by":
+                GlobalHelper::validateSchema([
+                    "find_by.criteria" => "required|array",
+                ], $this->getQuery());
+
                 $data = $store->findOneBy(
                     $param['find_one_by']['criteria'],
                 );
@@ -59,26 +95,26 @@ class QueryController extends RestController
         $this->returnJSON($data);
     }
 
-    public function insert()
+    private function insert()
     {
         $response = SleekDBHelper::insertParser($this->getQuery());
 
         $this->returnJSON($response);
     }
 
-    public function update()
+    private function update()
     {
         $response = SleekDBHelper::update($this->getQuery());
 
         $this->returnJSON($response);
     }
 
-    public function delete()
+    private function delete()
     {
 
     }
 
-    public function query()
+    private function queryBuilder()
     {
         $response = SleekDBHelper::queryBuilder($this->getQuery());
 

@@ -14,11 +14,7 @@ try {
 
     // Router list
     $router->addRoutes([
-        ['GET', '/fetch', 'App\Controllers\QueryController::fetch', 'fetch'],
-        ['GET', '/query', 'App\Controllers\QueryController::query', 'query'],
-        ['POST', '/insert', 'App\Controllers\QueryController::insert', 'insert'],
-        ['PUT', '/update', 'App\Controllers\QueryController::update', 'update'],
-        ['DELETE', '/delete', 'App\Controllers\QueryController::update', 'delete'],
+        ['POST', '/q', 'App\Controllers\QueryController::dbQuery', 'db_query'],
     ]);
 
     // match current request url
@@ -52,7 +48,14 @@ try {
     );
 
 } catch (Exception $e) {
+    $flag = $_GET['show_error_log'] ?? 0;
+    $msg = "Error, please contact administrator.";
+
+    if ($flag == 1) {
+        $msg = $e->getMessage();
+    }
+
     GlobalHelper::returnJSON([
-        "message" => "Error, please contact administrator.",
+        "message" => $msg,
     ], 500);
 }

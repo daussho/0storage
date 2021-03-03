@@ -3,36 +3,27 @@
 namespace App\Helpers;
 
 use App\Exceptions\ResponseException;
+use Rakit\Validation\Validator;
 
 /**
  * Global helper
  */
 class GlobalHelper
 {
-
     /**
-     * Validate required field
+     * @param array $rules
+     * @param array $data
      *
-     * @param array $requiredFields
-     * @param array $post
-     *
-     * @return array
+     * @return void
      */
-    public static function validateSchema(array $requiredFields, array $post): array
+    public static function validateSchema(array $rules, array $data): void
     {
-        $validation = [];
+        $validator = new Validator();
+        $validation = $validator->validate($data, $rules);
 
-        foreach ($requiredFields as $required => $key) {
-            if (!array_key_exists($key, $post)) {
-                $validation['required'][] = $key;
-            }
+        if ($validation->fails()) {
+            throw new ResponseException("Error schema", $validation->errors()->toArray(), 400);
         }
-
-        if (!empty($validation)) {
-            throw new ResponseException("Error schema", $validation, 400);
-        }
-
-        return $validation;
     }
 
     /**
