@@ -8,7 +8,7 @@
     }
   },
   "require": {
-    "rakibtg/sleekdb": "^2.8",
+    "rakibtg/sleekdb": "2.8.2",
     "altorouter/altorouter": "^2.0",
     "vlucas/phpdotenv": "^5.3",
     "rakit/validation": "^1.4"
