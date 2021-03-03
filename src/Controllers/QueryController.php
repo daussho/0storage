@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Basic\RestController;
 use App\Helpers\GlobalHelper;
 use App\Helpers\SleekDBHelper;
 use Rakit\Validation\Validator;

@@ -2,15 +2,16 @@
 
 namespace App\Controllers;
 
-use App\Basic\View;
+use App\Basic\WebController;
 
-class AuthController
+class AuthController extends WebController
 {
     public function login()
     {
-        $view = new View("login");
-        $view->assign("data", [
-            "name" => "John",
+        $this->returnView("login", [
+            "data" => [
+                "name" => "test",
+            ],
         ]);
     }
 }

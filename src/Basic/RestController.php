@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Basic;
 
-class RestController
+class RestController extends Controller
 {
     /**
      * @param string|null $key
