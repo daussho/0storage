@@ -5,6 +5,9 @@ require __DIR__ . '/vendor/autoload.php';
 use App\Exceptions\ResponseException;
 use App\Helpers\GlobalHelper;
 
+$flag = $_GET['show_error_log'] ?? 0;
+$msg = "Error, please contact administrator.";
+
 try {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->load();
@@ -38,19 +41,21 @@ try {
 
     return null;
 } catch (ResponseException $e) {
-
-    GlobalHelper::returnJSON(
-        [
-            "message" => $e->getMessage(),
-            "error" => $e->errorData(),
-        ],
-        $e->errorCode()
-    );
+    if ($flag == 0) {
+        GlobalHelper::returnJSON([
+            "message" => $msg,
+        ]);
+    } else {
+        GlobalHelper::returnJSON(
+            [
+                "message" => $e->getMessage(),
+                "error" => $e->errorData(),
+            ],
+            $e->errorCode()
+        );
+    }
 
 } catch (Exception $e) {
-    $flag = $_GET['show_error_log'] ?? 0;
-    $msg = "Error, please contact administrator.";
-
     if ($flag == 1) {
         $msg = $e->getMessage();
     }
