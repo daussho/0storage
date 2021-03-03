@@ -43,23 +43,7 @@ class SleekDBHelper
      * @param array $param
      *
      * @return array
-     */
-    public static function insertParser(array $param): array
-    {
-        $store = self::getStore($param);
-        $res = [];
-        if (self::isAssoc($param['data'])) {
-            $res = $store->insert($param['data']);
-        } else {
-            $res = $store->insertMany($param['data']);
-        }
-        return $res;
-    }
-
-    /**
-     * @param array $param
-     *
-     * @return array
+     * @deprecated
      */
     public static function queryBuilder(array $param): array
     {
@@ -115,20 +99,5 @@ class SleekDBHelper
             ->fetch();
 
         return $data;
-    }
-
-    /**
-     * @param array $param
-     *
-     * @return array
-     */
-    public static function update(array $param): array
-    {
-        $store = self::getStore($param);
-        if ($param['update'] == "update") {
-            return ["success" => $store->update($param['data'])];
-        } else if ($param['update'] == "update_by_id") {
-            return $store->updateById($param['id'], $param['data']);
-        }
     }
 }

@@ -228,8 +228,8 @@ class QueryController extends RestController
 
     private function queryBuilder()
     {
-        $response = SleekDBHelper::queryBuilder($this->getQuery());
-
-        $this->returnJSON($response);
+        $this->returnJSON([
+            "Message" => "Not implemented",
+        ]);
     }
 }
