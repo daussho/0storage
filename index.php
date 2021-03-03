@@ -21,6 +21,10 @@ try {
         ['GET', '/auth/login', 'App\Controllers\AuthController::login', 'auth_login'],
     ]);
 
+    $router->addRoutes([
+        ['GET', '/admin/login', 'App\Controllers\Admin\AuthController::login', 'admin_login'],
+    ]);
+
     // match current request url
     $match = $router->match();
 
