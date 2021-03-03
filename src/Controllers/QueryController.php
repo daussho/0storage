@@ -32,8 +32,8 @@ class QueryController extends RestController
             case "insert":
                 $this->insert();
                 break;
-            case "update":
-                $this->update();
+            case "edit":
+                $this->edit();
                 break;
             case "delete":
                 $this->delete();
@@ -91,6 +91,9 @@ class QueryController extends RestController
                     $param['find_one_by']['criteria'],
                 );
                 break;
+            default:
+                throw new ResponseException("Invalid fetch operation", [], 400);
+                break;
         }
 
         $this->returnJSON($data);
@@ -103,19 +106,53 @@ class QueryController extends RestController
         ], $this->getQuery());
 
         if (GlobalHelper::isAssoc($this->getQuery("data"))) {
-            $response = $this->store->insert($this->getQuery("data"));
+            $responseData = $this->store->insert($this->getQuery("data"));
         } else {
-            $response = $this->store->insertMany($this->getQuery("data"));
+            $responseData = $this->store->insertMany($this->getQuery("data"));
         }
 
-        $this->returnJSON($response);
+        $this->returnJSON($responseData);
     }
 
-    private function update()
+    private function edit()
     {
-        $response = SleekDBHelper::update($this->getQuery());
+        $param = $this->getQuery();
+        switch ($param['operation']) {
+            case "update_by_id":
+                GlobalHelper::validateSchema([
+                    "update_by_id.id" => "required|integer",
+                    "update_by_id.data" => "required|array",
+                ], $this->getQuery());
+                $update = $this->getQuery("update_by_id");
 
-        $this->returnJSON($response);
+                $responseData = $this->store->updateById($update["id"], $update["data"]);
+                break;
+
+            case "update":
+                GlobalHelper::validateSchema([
+                    "update.data" => "required|array",
+                ], $this->getQuery());
+
+                $update = $this->getQuery("update");
+                $responseData = $this->store->update($update["data"]);
+                break;
+
+            case "remove_fields_by_id":
+                GlobalHelper::validateSchema([
+                    "remove_fields_by_id.id" => "required|integer",
+                    "remove_fields_by_id.data" => "required|array",
+                ], $this->getQuery());
+                $update = $this->getQuery("update");
+                $responseData = $this->store->removeFieldsById($update["id"], $update["data"]);
+
+                break;
+
+            default:
+                throw new ResponseException("Invalid edit operation", [], 400);
+                break;
+        }
+
+        $this->returnJSON($responseData);
     }
 
     private function delete()

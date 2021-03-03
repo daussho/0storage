@@ -32,7 +32,7 @@ class RestController
      *
      * @return void
      */
-    public function returnJSON($data, $statusCode = 200): void
+    protected function returnJSON($data, $statusCode = 200): void
     {
         header("Content-Type: application/json");
         http_response_code($statusCode);
