@@ -4,19 +4,34 @@ namespace App\Controllers;
 
 class RestController
 {
-    protected function getQuery()
+    /**
+     * @param string|null $key
+     *
+     * @return mixed
+     */
+    protected function getQuery(string $key = null)
     {
         $query = file_get_contents('php://input');
 
         if (empty($query)) {
-            $query = [];
-        } else {
-            $query = json_decode($query, true);
+            return null;
         }
 
-        return $query;
+        $query = json_decode($query, true);
+
+        if (empty($key)) {
+            return $query;
+        }
+
+        return $query[$key];
     }
 
+    /**
+     * @param mixed $data
+     * @param int $statusCode
+     *
+     * @return void
+     */
     public function returnJSON($data, $statusCode = 200): void
     {
         header("Content-Type: application/json");

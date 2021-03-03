@@ -8,6 +8,8 @@ use App\Helpers\SleekDBHelper;
 
 class QueryController extends RestController
 {
+    private $store;
+
     public function __construct()
     {
         GlobalHelper::validateSchema([
@@ -15,6 +17,8 @@ class QueryController extends RestController
             "table" => "required",
             "operation" => "required",
         ], $this->getQuery());
+
+        $this->store = SleekDBHelper::getStore($this->getQuery());
     }
 
     public function dbQuery()
@@ -45,14 +49,11 @@ class QueryController extends RestController
 
     private function fetch()
     {
-        // $response = SleekDBHelper::find($this->getQuery());
-
         $param = $this->getQuery();
-        $store = SleekDBHelper::getStore($param);
 
         switch ($param['operation']) {
             case "find_all":
-                $data = $store->findAll();
+                $data = $this->store->findAll();
                 break;
 
             case "find_by_id":
@@ -60,7 +61,7 @@ class QueryController extends RestController
                     "find_by_id.id" => "required|integer",
                 ], $this->getQuery());
 
-                $data = $store->findById(
+                $data = $this->store->findById(
                     $param['find_by_id']['id']
                 );
                 break;
@@ -73,7 +74,7 @@ class QueryController extends RestController
                     "find_by.offset" => "required|integer",
                 ], $this->getQuery());
 
-                $data = $store->findBy(
+                $data = $this->store->findBy(
                     $param['find_by']['criteria'],
                     $param['find_by']['order_by'],
                     $param['find_by']['limit'],
@@ -86,7 +87,7 @@ class QueryController extends RestController
                     "find_by.criteria" => "required|array",
                 ], $this->getQuery());
 
-                $data = $store->findOneBy(
+                $data = $this->store->findOneBy(
                     $param['find_one_by']['criteria'],
                 );
                 break;
@@ -97,7 +98,15 @@ class QueryController extends RestController
 
     private function insert()
     {
-        $response = SleekDBHelper::insertParser($this->getQuery());
+        GlobalHelper::validateSchema([
+            "data" => "required|array",
+        ], $this->getQuery());
+
+        if (GlobalHelper::isAssoc($this->getQuery("data"))) {
+            $response = $this->store->insert($this->getQuery("data"));
+        } else {
+            $response = $this->store->insertMany($this->getQuery("data"));
+        }
 
         $this->returnJSON($response);
     }

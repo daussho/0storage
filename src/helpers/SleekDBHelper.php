@@ -131,18 +131,4 @@ class SleekDBHelper
             return $store->updateById($param['id'], $param['data']);
         }
     }
-
-    /**
-     * @param array $arr
-     *
-     * @return bool
-     */
-    public static function isAssoc(array $arr): bool
-    {
-        if (array() === $arr) {
-            return false;
-        }
-
-        return array_keys($arr) !== range(0, count($arr) - 1);
-    }
 }
