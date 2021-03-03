@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Exceptions\ResponseException;
 use App\Helpers\GlobalHelper;
 use App\Helpers\SleekDBHelper;
+use Rakit\Validation\Validator;
 
 class QueryController extends RestController
 {
@@ -25,6 +25,19 @@ class QueryController extends RestController
     {
         $queryType = $_GET['query'];
 
+        GlobalHelper::validateSchema([
+            "query" => [
+                "required",
+                (new Validator())("in", [
+                    "find",
+                    "insert",
+                    "edit",
+                    "delete",
+                    "query_builder",
+                ]),
+            ],
+        ], $_GET);
+
         switch ($queryType) {
             case "find":
                 $this->fetch();
@@ -41,15 +54,24 @@ class QueryController extends RestController
             case "query_builder":
                 $this->queryBuilder();
                 break;
-            default:
-                throw new ResponseException("Query not found", [], 400);
-                break;
         }
     }
 
     private function fetch()
     {
         $param = $this->getQuery();
+
+        GlobalHelper::validateSchema([
+            "operation" => [
+                "required",
+                (new Validator())("in", [
+                    "find_all",
+                    "find_by_id",
+                    "find_by",
+                    "find_one_by",
+                ]),
+            ],
+        ], $param);
 
         switch ($param['operation']) {
             case "find_all":
@@ -91,9 +113,6 @@ class QueryController extends RestController
                     $param['find_one_by']['criteria'],
                 );
                 break;
-            default:
-                throw new ResponseException("Invalid fetch operation", [], 400);
-                break;
         }
 
         $this->returnJSON($data);
@@ -117,6 +136,18 @@ class QueryController extends RestController
     private function edit()
     {
         $param = $this->getQuery();
+
+        GlobalHelper::validateSchema([
+            "operation" => [
+                "required",
+                (new Validator())("in", [
+                    "update_by_id",
+                    "update",
+                    "remove_fields_by_id",
+                ]),
+            ],
+        ], $param);
+
         switch ($param['operation']) {
             case "update_by_id":
                 GlobalHelper::validateSchema([
@@ -143,12 +174,8 @@ class QueryController extends RestController
                     "remove_fields_by_id.data" => "required|array",
                 ], $this->getQuery());
                 $update = $this->getQuery("update");
+
                 $responseData = $this->store->removeFieldsById($update["id"], $update["data"]);
-
-                break;
-
-            default:
-                throw new ResponseException("Invalid edit operation", [], 400);
                 break;
         }
 
@@ -157,7 +184,46 @@ class QueryController extends RestController
 
     private function delete()
     {
+        $param = $this->getQuery();
 
+        GlobalHelper::validateSchema([
+            "operation" => [
+                "required",
+                (new Validator())("in", [
+                    "delete_by",
+                    "delete_by_id",
+                ]),
+            ],
+        ], $param);
+
+        switch ($param["operation"]) {
+            case "delete_by":
+                GlobalHelper::validateSchema([
+                    "delete_by.criteria" => "required|array",
+                    "delete_by.return_option" => [
+                        "required",
+                        (new Validator())("in", [
+                            "DELETE_RETURN_BOOL",
+                            "DELETE_RETURN_RESULTS",
+                            "DELETE_RETURN_COUNT",
+                        ]),
+                    ],
+                ], $this->getQuery());
+                $delete = $this->getQuery("delete_by");
+
+                $responseData = $this->store->deleteBy($delete["criteria"], $delete["return_option"]);
+                break;
+            case "delete_by_id":
+                GlobalHelper::validateSchema([
+                    "delete_by_id.id" => "required|integer",
+                ], $this->getQuery());
+                $delete = $this->getQuery("delete_by_id");
+
+                $responseData = $this->store->deleteById($delete["id"]);
+                break;
+        }
+
+        $this->returnJSON($responseData);
     }
 
     private function queryBuilder()
