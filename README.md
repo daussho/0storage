@@ -7,7 +7,9 @@ A (not really) rest interface for [SleekDB](https://github.com/rakibtg/SleekDB).
 1. Clone this repository on your local machine
 2. install required package
 
-All operation use `HTTP POST request`.
+All query operation use `HTTP POST ` to `/q?query=`.
+
+Accepted parameter for `query`: `find, insert, edit, delete, query_builder`
 
 Basic required parameter, must be sent on every request.
 
@@ -15,11 +17,8 @@ Basic required parameter, must be sent on every request.
     
     {
        "app_name":"your_app_name",
-       "table":"your_table_name",
-       "operation":"query_builder"
+       "table":"your_table_name"
     }
-    
-Accepted parameter for operation: `find, insert, update, delete, query_builder`.
 
 ## Insert
 
