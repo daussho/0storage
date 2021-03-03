@@ -5,9 +5,7 @@ A (not really) rest interface for [SleekDB](https://github.com/rakibtg/SleekDB).
 
 ## How to use
 1. Clone this repository on your local machine
-2. Run on php webserver
-
-`php -S localhost:port`
+2. install required package
 
 All operation use `HTTP POST request`.
 
@@ -21,7 +19,7 @@ Basic required parameter, must be sent on every request.
        "operation":"query_builder"
     }
     
-Accepted parameter for operation: `insert, query_builder, update`.
+Accepted parameter for operation: `find, insert, update, delete, query_builder`.
 
 ## Insert
 
@@ -45,33 +43,19 @@ If you put `array of object` in `data`, it will use `insertMany()`, otherwise it
 
 ## Query Builder
 
-### select
-Select column.
+Not implemented yet.
 
-    {
-	    "select":  ["name"],
-    }
-
-Select column as alias.
-    
-    {
-	    "select":  {
-            "alias": "original"
-        }
-    }
-
-## Update
+## Edit
 **Warning, all updated field can't be reverted, please be cautious when selecting table name and field to update.**
 
 ### Update by id
 Update by id, id must reference to document `_id`.
 
     {
-        "operation": "update",
-        "id": 1,
-        "update": "update_by_id",
-        "data": {
-            "field": "update here"
+        "operation": "update_by_id",
+        "update_by_id": {
+            "id": 1,
+            "date": "update here"
         }
     }
 
@@ -80,9 +64,7 @@ Update all listed `_id`, didn't need id, but all data need `_id`.
 
     {
         "operation": "update",
-        "id": 0,
-        "update": "update",
-        "data": [
+        "update": [
             {
                 "_id": 1
                 "field": "update here"
@@ -104,30 +86,30 @@ Update all listed `_id`, didn't need id, but all data need `_id`.
 
 - [x] findOneBy
 
-- [x] select
+- [x] updateById
 
-- [x] where
+- [x] update
 
-- [x] skip
+- [x] removeFieldsById
 
-- [x] orderBy
+- [x] deleteBy
+
+- [x] deleteById
+
+- [ ] select
+
+- [ ] where
+
+- [ ] skip
+
+- [ ] orderBy
 
 - [ ] groupBy
 
 - [ ] having
 
-- [x] search
+- [ ] search
 
-- [x] distinct
+- [ ] distinct
 
-- [x] join (One table join)
-
-- [x] updateById
-
-- [x] update
-
-- [ ] removeFieldsById
-
-- [ ] deleteBy
-
-- [ ] deleteById
+- [ ] join (One table join)
