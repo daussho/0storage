@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   web-server:
-    container_name: restdb
+    container_name: petrikor
     build:
       dockerfile: Dockerfile
       context: .
