@@ -84,48 +84,49 @@ class QueryController extends RestController
 
     private function edit()
     {
-        $param = $this->getQuery();
+        $query = $this->getQuery('query');
 
         GlobalHelper::validateSchema([
             "operation" => [
-                "required",
                 (new Validator())("in", [
                     "update_by_id",
                     "update",
                     "remove_fields_by_id",
                 ]),
             ],
-        ], $param);
+        ], $query);
 
-        switch ($param['operation']) {
+        $update = $query[$query['operation']];
+        switch ($query['operation']) {
             case "update_by_id":
                 GlobalHelper::validateSchema([
-                    "update_by_id.id" => "required|integer",
-                    "update_by_id.data" => "required|array",
-                ], $this->getQuery());
-                $update = $this->getQuery("update_by_id");
+                    "id" => "required|integer",
+                    "data" => "required|array",
+                ], $update);
 
                 $responseData = $this->store->updateById($update["id"], $update["data"]);
                 break;
 
             case "update":
                 GlobalHelper::validateSchema([
-                    "update.data" => "required|array",
-                ], $this->getQuery());
+                    "data" => "required|array",
+                ], $update);
 
-                $update = $this->getQuery("update");
-                $responseData = $this->store->update($update["data"]);
+                $success = $this->store->update($update["data"]);
+                if ($success) {
+                    $responseData = $update['data'];
+                }
                 break;
 
             case "remove_fields_by_id":
-                GlobalHelper::validateSchema([
-                    "remove_fields_by_id.id" => "required|integer",
-                    "remove_fields_by_id.data" => "required|array",
-                ], $this->getQuery());
-                $update = $this->getQuery("update");
+                // GlobalHelper::validateSchema([
+                //     "remove_fields_by_id.id" => "required|integer",
+                //     "remove_fields_by_id.data" => "required|array",
+                // ], $this->getQuery());
+                // $update = $this->getQuery("update");
 
-                $responseData = $this->store->removeFieldsById($update["id"], $update["data"]);
-                break;
+                // $responseData = $this->store->removeFieldsById($update["id"], $update["data"]);
+                // break;
         }
 
         $this->returnJSON($responseData);
