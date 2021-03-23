@@ -16,7 +16,7 @@ class QueryController extends RestController
         GlobalHelper::validateSchema([
             "app_name" => "required",
             "table" => "required",
-            "operation" => "required",
+            "query" => "required",
         ], $this->getQuery());
 
         $this->store = SleekDBHelper::getStore($this->getQuery());
@@ -24,22 +24,22 @@ class QueryController extends RestController
 
     public function dbQuery()
     {
-        $queryType = $_GET['query'];
+        $query = $this->getQuery("query");
 
-        GlobalHelper::validateSchema([
-            "query" => [
-                "required",
-                (new Validator())("in", [
-                    "find",
-                    "insert",
-                    "edit",
-                    "delete",
-                    "query_builder",
-                ]),
-            ],
-        ], $_GET);
+        // GlobalHelper::validateSchema([
+        //     "query" => [
+        //         "required",
+        //         (new Validator())("in", [
+        //             "find",
+        //             "insert",
+        //             "edit",
+        //             "delete",
+        //             "query_builder",
+        //         ]),
+        //     ],
+        // ], $_GET);
 
-        switch ($queryType) {
+        switch ($query['name']) {
             case "find":
                 $this->fetch();
                 break;
@@ -61,75 +61,77 @@ class QueryController extends RestController
     private function fetch()
     {
         $param = $this->getQuery();
+        $query = $param['query'];
 
-        GlobalHelper::validateSchema([
-            "operation" => [
-                "required",
-                (new Validator())("in", [
-                    "find_all",
-                    "find_by_id",
-                    "find_by",
-                    "find_one_by",
-                ]),
-            ],
-        ], $param);
+        // GlobalHelper::validateSchema([
+        //     "operation" => [
+        //         "required",
+        //         (new Validator())("in", [
+        //             "find_all",
+        //             "find_by_id",
+        //             "find_by",
+        //             "find_one_by",
+        //         ]),
+        //     ],
+        // ], $param);
 
-        switch ($param['operation']) {
+        switch ($query) {
             case "find_all":
-                $data = $this->store->findAll();
-                break;
+                //     $data = $this->store->findAll();
+                //     break;
 
             case "find_by_id":
-                GlobalHelper::validateSchema([
-                    "find_by_id.id" => "required|integer",
-                ], $this->getQuery());
+                //     GlobalHelper::validateSchema([
+                //         "find_by_id.id" => "required|integer",
+                //     ], $this->getQuery());
 
-                $data = $this->store->findById(
-                    $param['find_by_id']['id']
-                );
-                break;
+                //     $data = $this->store->findById(
+                //         $param['find_by_id']['id']
+                //     );
+                //     break;
 
             case "find_by":
-                GlobalHelper::validateSchema([
-                    "find_by.criteria" => "required|array",
-                    "find_by.order_by" => "required",
-                    "find_by.limit" => "required|integer",
-                    "find_by.offset" => "required|integer",
-                ], $this->getQuery());
+                // GlobalHelper::validateSchema([
+                //     "find_by.criteria" => "required|array",
+                //     "find_by.order_by" => "required",
+                //     "find_by.limit" => "required|integer",
+                //     "find_by.offset" => "required|integer",
+                // ], $this->getQuery());
 
-                $data = $this->store->findBy(
-                    $param['find_by']['criteria'],
-                    $param['find_by']['order_by'],
-                    $param['find_by']['limit'],
-                    $param['find_by']['offset'],
-                );
+                // $data = $this->store->findBy(
+                //     $param['find']['criteria'],
+                //     $param['find']['order_by'],
+                //     $param['find']['limit'],
+                //     $param['find']['offset'],
+                // );
                 break;
 
             case "find_one_by":
-                GlobalHelper::validateSchema([
-                    "find_by.criteria" => "required|array",
-                ], $this->getQuery());
+                //     GlobalHelper::validateSchema([
+                //         "find_by.criteria" => "required|array",
+                //     ], $this->getQuery());
 
-                $data = $this->store->findOneBy(
-                    $param['find_one_by']['criteria'],
-                );
-                break;
+                //     $data = $this->store->findOneBy(
+                //         $param['find_one_by']['criteria'],
+                //     );
+                //     break;
         }
+
+        $data = $this->store->findBy(
+            $query['find']['criteria'] ?? ["_id", ">", 0],
+            $query['find']['order_by'],
+            $query['find']['limit'] ?? 25,
+            $query['find']['offset'],
+        );
 
         $this->returnJSON($data);
     }
 
     private function insert()
     {
-        GlobalHelper::validateSchema([
-            "data" => "required|array",
-        ], $this->getQuery());
+        $query = $this->getQuery("query");
 
-        if (GlobalHelper::isAssoc($this->getQuery("data"))) {
-            $responseData = $this->store->insert($this->getQuery("data"));
-        } else {
-            $responseData = $this->store->insertMany($this->getQuery("data"));
-        }
+        $responseData = $this->store->insertMany($query['insert']);
 
         $this->returnJSON($responseData);
     }

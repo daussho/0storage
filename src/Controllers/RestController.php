@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use Exception;
+
 class RestController
 {
     /**
@@ -9,12 +11,12 @@ class RestController
      *
      * @return mixed
      */
-    protected function getQuery(string $key = null): mixed
+    protected function getQuery(string $key = null)
     {
         $query = file_get_contents('php://input');
 
         if (empty($query)) {
-            return null;
+            throw new Exception("Empty body");
         }
 
         $query = json_decode($query, true);
