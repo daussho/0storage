@@ -50,7 +50,7 @@ class QueryController extends RestController
                 $this->edit();
                 break;
             case "delete":
-                $this->delete();
+                // $this->delete();
                 break;
             case "query_builder":
                 // $this->queryBuilder();
