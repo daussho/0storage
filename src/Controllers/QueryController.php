@@ -5,10 +5,11 @@ namespace App\Controllers;
 use App\Helpers\GlobalHelper;
 use App\Helpers\SleekDBHelper;
 use Rakit\Validation\Validator;
+use SleekDB\Store;
 
 class QueryController extends RestController
 {
-    private $store;
+    private Store $store;
 
     public function __construct()
     {

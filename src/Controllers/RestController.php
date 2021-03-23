@@ -9,7 +9,7 @@ class RestController
      *
      * @return mixed
      */
-    protected function getQuery(string $key = null)
+    protected function getQuery(string $key = null): mixed
     {
         $query = file_get_contents('php://input');
 
@@ -27,12 +27,12 @@ class RestController
     }
 
     /**
-     * @param mixed $data
+     * @param array $data
      * @param int $statusCode
      *
      * @return void
      */
-    protected function returnJSON($data, $statusCode = 200): void
+    protected function returnJSON(array $data, $statusCode = 200): void
     {
         header("Content-Type: application/json");
         http_response_code($statusCode);
