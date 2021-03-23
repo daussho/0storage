@@ -70,7 +70,7 @@ class QueryController extends RestController
             $query['param']['offset'],
         );
 
-        $this->returnJSON($this->store->findAll());
+        $this->returnJSON($data);
     }
 
     private function insert()
