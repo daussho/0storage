@@ -1,6 +1,6 @@
 {
-  "name": "daussho/restdb",
-  "description": "A rest interface for SleekDB",
+  "name": "daussho/petrikor",
+  "description": "A database-as-a-service using SleekDB",
   "type": "project",
   "autoload": {
     "psr-4": {
