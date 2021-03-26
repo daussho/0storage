@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Basic;
+namespace App\Core;
 
 use App\Helpers\ResponseHelper;
 use Exception;

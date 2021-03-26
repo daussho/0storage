@@ -23,7 +23,7 @@ try {
     ]);
 
     $router->addRoutes([
-        ['GET', '/admin/login', 'App\Controllers\Admin\AuthController::login', 'admin_login'],
+        ['POST', '/admin/register', 'App\Controllers\Admin\AdminController::register', 'admin_register'],
     ]);
 
     // match current request url

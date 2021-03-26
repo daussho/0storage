@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Basic;
+namespace App\Core;
 
 class View
 {
@@ -28,6 +28,5 @@ class View
     {
         extract($this->data);
         include $this->render;
-
     }
 }

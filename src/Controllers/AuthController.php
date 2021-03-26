@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Basic\WebController;
+use App\Core\WebController;
 
 class AuthController extends WebController
 {
