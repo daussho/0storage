@@ -1,15 +1,14 @@
 
-# RestDB
+# Petrikor
 
-A (not really) rest interface for [SleekDB](https://github.com/rakibtg/SleekDB). Built for who that want to rapid prototyping without doing backend.
+A database as a service using [SleekDB](https://github.com/rakibtg/SleekDB). Built for who that want to rapid prototyping without doing backend.
 
 ## How to use
 1. Clone this repository on your local machine
 2. install required package
+3. run `docker-compose up -d` or use your own web server
 
 All query operation use `HTTP POST` to `/q?query=`.
-
-Accepted parameter for `query`: `find, insert, edit, delete, query_builder`.
 
 Use parameter `show_error_log=1` to use detail log on response.
 
@@ -27,21 +26,56 @@ Basic required parameter, must be sent on every request.
 Add below parameter to the basic required parameter.
 	
     {
-       "operation":"insert",
-       "data":[
-	       {
-		       "name":"John",
-		       "age":"20"
-	       },
-	       {
-		       "name":"Doe",
-		       "age":"25"
-	       }
-       ]
+       "query": {
+            "name": "insert",
+            "insert": [
+                {
+                    "name":"John",
+                    "age":"20"
+                },
+                {
+                    "name":"Doe",
+                    "age":"25"
+                }
+            ]
+       }
     }
 	
-If you put `array of object` in `data`, it will use `insertMany()`, otherwise it will use `insert()`
+`insert` must be `array of object`
 
+## Find
+Add below parameter to the basic required parameter.
+
+    {
+        "query": {
+        "name": "find",
+            "param": {
+                "criteria": null,
+                "order_by": null,
+                "limit": null,
+                "offset": null
+            }
+        }
+    }
+
+### How to use
+
+    {
+        "criteria": ["name", "LIKE", "%test%"]
+    }
+
+or
+
+    {
+        "criteria": [
+            ["name", "LIKE", "%test%"],
+            "OR",
+            ["name", "=", "john"]
+        ]
+    }
+
+
+For complete [reference](https://sleekdb.github.io/#/fetch-data#findBy).
 ## Query Builder
 
 Not implemented yet.
@@ -50,67 +84,35 @@ Not implemented yet.
 **Warning, all updated field can't be reverted, please be cautious when selecting table name and field to update.**
 
 ### Update by id
-Update by id, id must reference to document `_id`.
+Update by id, id must be reference to document `_id`.
 
     {
-        "operation": "update_by_id",
-        "update_by_id": {
-            "id": 1,
-            "date": "update here"
+        "query": {
+            "name": "edit",
+            "operation": "update_by_id",
+            "update_by_id": {
+                "id": 2,
+                "data": {
+                    "url": "https://www.google.co.id/"
+                }
+            }
         }
     }
 
 ### update
-Update all listed `_id`, didn't need id, but all data need `_id`.
+Update all listed `_id`, all data must include `_id`.
 
     {
-        "operation": "update",
-        "update": [
-            {
-                "_id": 1
-                "field": "update here"
+        "query": {
+            "name": "edit",
+            "operation": "update",
+            "update": {
+                "data": {
+                    "url": "https://www.google.co.id/",
+                    "user_id": "1",
+                    "visibility": "PRIVATE",
+                    "_id": 2
+                }
             }
-        ]
+        }
     }
-
-## Implementation list
-
-- [x] insert
-
-- [x] insertMany
-
-- [x] findAll
-
-- [x] findById
-
-- [x] findBy
-
-- [x] findOneBy
-
-- [x] updateById
-
-- [x] update
-
-- [x] removeFieldsById
-
-- [x] deleteBy
-
-- [x] deleteById
-
-- [ ] select
-
-- [ ] where
-
-- [ ] skip
-
-- [ ] orderBy
-
-- [ ] groupBy
-
-- [ ] having
-
-- [ ] search
-
-- [ ] distinct
-
-- [ ] join (One table join)

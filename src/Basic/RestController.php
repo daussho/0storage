@@ -2,7 +2,9 @@
 
 namespace App\Basic;
 
-class RestController extends Controller
+use Exception;
+
+class RestController
 {
     /**
      * @param string|null $key
@@ -14,7 +16,7 @@ class RestController extends Controller
         $query = file_get_contents('php://input');
 
         if (empty($query)) {
-            return null;
+            throw new Exception("Empty body");
         }
 
         $query = json_decode($query, true);
@@ -27,12 +29,12 @@ class RestController extends Controller
     }
 
     /**
-     * @param mixed $data
+     * @param array $data
      * @param int $statusCode
      *
      * @return void
      */
-    protected function returnJSON($data, $statusCode = 200): void
+    protected function returnJSON(array $data, $statusCode = 200): void
     {
         header("Content-Type: application/json");
         http_response_code($statusCode);

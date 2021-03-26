@@ -59,7 +59,6 @@ try {
             $e->errorCode()
         );
     }
-
 } catch (Exception $e) {
     if ($flag == 1) {
         $msg = $e->getMessage();
