@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helpers;
 
 use App\Exceptions\ResponseException;
@@ -24,22 +26,6 @@ class GlobalHelper
         if ($validation->fails()) {
             throw new ResponseException("Error schema", $validation->errors()->toArray(), 400);
         }
-    }
-
-    /**
-     * Send HTTP JSON response
-     *
-     * @param mixed $data
-     * @param int $statusCode
-     *
-     * @return void
-     * @deprecated
-     */
-    public static function returnJSON($data, $statusCode = 200): void
-    {
-        header("Content-Type: application/json");
-        http_response_code($statusCode);
-        echo json_encode($data);
     }
 
     /**

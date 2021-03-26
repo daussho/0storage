@@ -4,6 +4,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 use App\Exceptions\ResponseException;
 use App\Helpers\GlobalHelper;
+use App\Helpers\ResponseHelper;
 
 $flag = $_GET['show_error_log'] ?? 0;
 $msg = "Error, please contact administrator.";
@@ -47,11 +48,11 @@ try {
     return null;
 } catch (ResponseException $e) {
     if ($flag == 0) {
-        GlobalHelper::returnJSON([
+        ResponseHelper::returnJSON([
             "message" => $msg,
         ]);
     } else {
-        GlobalHelper::returnJSON(
+        ResponseHelper::returnJSON(
             [
                 "message" => $e->getMessage(),
                 "error" => $e->errorData(),
@@ -64,7 +65,7 @@ try {
         $msg = $e->getMessage();
     }
 
-    GlobalHelper::returnJSON([
+    ResponseHelper::returnJSON([
         "message" => $msg,
     ], 500);
 }
