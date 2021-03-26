@@ -24,9 +24,9 @@ class SleekDBHelper
      *
      * @return string
      */
-    private static function getTableName(string $appName, string $tableName): string
+    private static function getAppDir(string $appName): string
     {
-        return hash($_ENV['DB_HASH'], $appName) . "_" . $appName . "_" . $tableName;
+        return self::DATA_DIR . "/" . hash($_ENV['DB_HASH'], $appName) . "_" . $appName;
     }
 
     /**
@@ -36,7 +36,11 @@ class SleekDBHelper
      */
     public static function getStore(array $query): Store
     {
-        return new Store(self::getTableName($query['app_name'], $query['table']), self::DATA_DIR, self::DB_CONFIG);
+        return new Store(
+            $query['table'],
+            self::getAppDir($query['app_name']),
+            self::DB_CONFIG
+        );
     }
 
     /**
