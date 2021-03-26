@@ -24,6 +24,7 @@ try {
 
     $router->addRoutes([
         ['POST', '/admin/register', 'App\Controllers\Admin\AdminController::register', 'admin_register'],
+        ['POST', '/admin/login', 'App\Controllers\Admin\AdminController::login', 'admin_login'],
     ]);
 
     // match current request url
@@ -42,7 +43,7 @@ try {
         }
     } else {
         // no route was matched
-        throw new ResponseException("Not found", [], 404);
+        throw new ResponseException("Route not found", [], 404);
     }
 
     return null;
