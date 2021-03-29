@@ -3,7 +3,6 @@
 require __DIR__ . '/vendor/autoload.php';
 
 use App\Exceptions\ResponseException;
-use App\Helpers\GlobalHelper;
 use App\Helpers\ResponseHelper;
 
 $flag = $_GET['show_error_log'] ?? 0;
@@ -12,20 +11,24 @@ $msg = "Error, please contact administrator.";
 try {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->load();
-    $dotenv->required(['DB_HASH'])->notEmpty();
+    $dotenv->required(['DB_HASH', 'APP_NAME'])->notEmpty();
 
     $router = new AltoRouter();
 
     // Router list
-    $router->addRoutes([
+    $router->addRoutes(generateRoute("v0", [
         ['POST', '/q', 'App\Controllers\QueryController::dbQuery', 'db_query'],
         ['GET', '/auth/login', 'App\Controllers\AuthController::login', 'auth_login'],
-    ]);
 
-    $router->addRoutes([
+        // Admin
         ['POST', '/admin/register', 'App\Controllers\Admin\AdminController::register', 'admin_register'],
         ['POST', '/admin/login', 'App\Controllers\Admin\AdminController::login', 'admin_login'],
-    ]);
+    ]));
+
+    // Temp router
+    $router->addRoutes(generateRoute("v0a", [
+        ['POST', '/admin/register', 'App\Controllers\Admin\AdminController::registerNew', 'admin_register'],
+    ]));
 
     // match current request url
     $match = $router->match();
@@ -69,4 +72,19 @@ try {
     ResponseHelper::returnJSON([
         "message" => $msg,
     ], 500);
+}
+
+function generateRoute(string $version, array $routes)
+{
+    foreach ($routes as $key => $value) {
+        [$methods, $route, $action, $name] = $value;
+        $routes[$key] = [
+            $methods,
+            "/$version$route",
+            "$action",
+            "$name\\_$version",
+        ];
+    }
+
+    return $routes;
 }
