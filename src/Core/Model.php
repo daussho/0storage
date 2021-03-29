@@ -16,6 +16,11 @@ class Model extends Store
      */
     protected $_rules;
 
+    /**
+     * @var array
+     */
+    protected $_exclude;
+
     public function __construct($storeName, $rules = [])
     {
         parent::__construct(
@@ -79,7 +84,7 @@ class Model extends Store
         $validation = $validator->validate($data, $this->_rules);
 
         if ($validation->fails()) {
-            throw new ResponseException("Error schema", $validation->errors()->toArray(), 400);
+            throw new ResponseException(400, "Error schema", $validation->errors()->toArray());
         }
     }
 }

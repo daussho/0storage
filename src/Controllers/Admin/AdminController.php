@@ -6,46 +6,25 @@ namespace App\Controllers\Admin;
 
 use App\Core\Model;
 use App\Core\RestController;
+use App\Exceptions\ResponseException;
 use App\Helpers\GlobalHelper;
 use App\Models\Admin;
-use SleekDB\Store;
 
 class AdminController extends RestController
 {
     /**
-     * @var Store
+     * @var Admin
      */
     private $store;
 
-    private const MODEL = "Admin";
-
     public function __construct()
     {
-        $this->store = new Model(self::MODEL);
+        $this->store = new Admin();
     }
 
     public function register()
     {
         $query = $this->getQuery();
-
-        GlobalHelper::validateSchema([
-            "username" => "required",
-            "password" => "required",
-            "email" => "required|email",
-            "name" => "required",
-        ], $query);
-
-        $found = $this->store->findOneBy([
-            ["username", "=", $query["username"]],
-            ["email", "=", $query["email"]],
-        ]);
-
-        if (!empty($found)) {
-            $this->returnJSON([
-                "message" => "Duplicate username or password!"
-            ], 500);
-            return;
-        }
 
         $insert = $this->store->insert([
             "username" => $query["username"],
@@ -54,7 +33,7 @@ class AdminController extends RestController
             "name" => $query["name"]
         ]);
 
-        $this->returnJSON($insert);
+        $this->exclude(["password"])->returnJSON($insert);
     }
 
     public function registerNew()
@@ -82,24 +61,17 @@ class AdminController extends RestController
             "password" => "required",
         ], $query);
 
-        $user = $this->store->findOneBy([
-            ["username", "=", $query["username"]],
-        ]);
+        $user = $this->store->findOneBy(["username", "=", $query["username"]]);
 
         if (empty($user)) {
-            $this->returnJSON([
-                "message" => "Username not found!"
-            ], 404);
+            throw new ResponseException(404, "Username not found");
             return;
         }
 
         if (!password_verify($query["password"], $user["password"])) {
-            $this->returnJSON([
-                "message" => "Wrong password!"
-            ], 400);
-            return;
+            throw new ResponseException(400, "Wrong password!");
         }
 
-        $this->returnJSON($user);
+        $this->exclude(["_id", "password"])->returnJSON($user);
     }
 }

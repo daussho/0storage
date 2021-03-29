@@ -8,6 +8,11 @@ use Exception;
 class RestController
 {
     /**
+     * @var array
+     */
+    private $_exclude;
+
+    /**
      * @param string|null $key
      *
      * @return mixed
@@ -33,11 +38,21 @@ class RestController
      */
     protected function returnJSON(array $data, $statusCode = 200): void
     {
+        foreach ($this->_exclude as $key => $value) {
+            unset($data[$value]);
+        }
+
         ResponseHelper::returnJSON([
             "code" => $statusCode,
             "success" => $statusCode === 200,
             "data" => $data,
             "timestamp" => date(DATE_ISO8601),
         ], $statusCode);
+    }
+
+    protected function exclude(array $exclude)
+    {
+        $this->_exclude = $exclude;
+        return $this;
     }
 }
