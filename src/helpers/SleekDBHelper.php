@@ -19,14 +19,11 @@ class SleekDBHelper
     ];
 
     /**
-     * @param string $appName
-     * @param string $tableName
-     *
      * @return string
      */
-    private static function getAppDir(string $appName): string
+    public static function getAppDir(): string
     {
-        return self::DATA_DIR . "/" . hash($_ENV['DB_HASH'], $appName) . "_" . $appName;
+        return self::DATA_DIR . "/" . hash($_ENV['DB_HASH'], $_ENV['APP_NAME']) . "_" . $_ENV['APP_NAME'];
     }
 
     /**
@@ -34,74 +31,20 @@ class SleekDBHelper
      *
      * @return Store
      */
-    public static function getStore(array $query): Store
+    public static function getStore(string $table): Store
     {
         return new Store(
-            $query['table'],
-            self::getAppDir($query['app_name']),
+            $table,
+            self::getAppDir($_ENV['APP_NAME']),
             self::DB_CONFIG
         );
     }
 
     /**
-     * @param array $param
-     *
      * @return array
-     * @deprecated
      */
-    public static function queryBuilder(array $param): array
+    public static function getDBConfig(): array
     {
-        $store = self::getStore($param);
-        $builder = $store->createQueryBuilder();
-
-        if (!empty($param['select']) && is_array($param['select'])) {
-            $builder = $builder->select($param['select']);
-        }
-
-        if (!empty($param['join'])) {
-            $joinStore = new Store(
-                self::getTableName($param['app_name'], $param['join']['table']),
-                self::DATA_DIR,
-                self::DB_CONFIG
-            );
-
-            $builder = $builder->join(
-                function ($var) use ($joinStore, $param) {
-                    return $joinStore->findBy([
-                        $param['join']['foreign_key'],
-                        "===",
-                        $var[$param['join']['relation_key']],
-                    ]);
-                },
-                $param['join']['table']
-            );
-        }
-
-        if (!empty($param['where'])) {
-            $builder = $builder->where([$param['where']]);
-        }
-
-        if (!empty($param['search'])) {
-            $builder = $builder->search($param['search']['fields'], $param['search']['keyword']);
-        }
-
-        if (!empty($param['distinct'])) {
-            $builder = $builder->distinct($param['distinct']);
-        }
-
-        if (!empty($param['skip'])) {
-            $builder = $builder->skip($param['skip']);
-        }
-
-        if (!empty($param['order_by'])) {
-            $builder = $builder->orderBy($param['order_by']);
-        }
-
-        $data = $builder
-            ->disableCache()
-            ->getQuery()
-            ->fetch();
-
-        return $data;
+        return self::DB_CONFIG;
     }
 }
