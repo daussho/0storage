@@ -86,4 +86,19 @@ class GlobalHelper
         echo json_encode($data);
         exit;
     }
+
+    public static function generateRoute(string $version, array $routes)
+    {
+        foreach ($routes as $key => $value) {
+            [$methods, $route, $action, $name] = $value;
+            $routes[$key] = [
+                $methods,
+                "/$version$route",
+                "$action",
+                "$name.$version",
+            ];
+        }
+
+        return $routes;
+    }
 }
