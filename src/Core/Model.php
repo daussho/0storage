@@ -44,7 +44,9 @@ class Model extends Store
      */
     public function insert(array $data): array
     {
-        $this->validateModel($data);
+        if (!empty($this->_rules)) {
+            $this->validateModel($data);
+        }
 
         return parent::insert($data);
     }
@@ -62,8 +64,10 @@ class Model extends Store
 
     public function insertMany(array $data): array
     {
-        foreach ($data as $key => $value) {
-            $this->validateModel($value);
+        if (!empty($this->_rules)) {
+            foreach ($data as $key => $value) {
+                $this->validateModel($value);
+            }
         }
 
         return parent::insertMany($data);
