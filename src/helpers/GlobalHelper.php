@@ -24,7 +24,7 @@ class GlobalHelper
         $validation = $validator->validate($data, $rules);
 
         if ($validation->fails()) {
-            throw new ResponseException("Error schema", $validation->errors()->toArray(), 400);
+            throw new ResponseException(400, "Error schema", $validation->errors()->toArray());
         }
     }
 

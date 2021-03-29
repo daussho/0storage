@@ -35,11 +35,11 @@ try {
         } else {
             // here your routes are wrong.
             // Throw an exception in debug, send a  500 error in production
-            throw new ResponseException("Method not found", [], 500);
+            throw new ResponseException(500, "Method not found");
         }
     } else {
         // no route was matched
-        throw new ResponseException("Route not found", [], 404);
+        throw new ResponseException(404, "Route not found");
     }
 
     return null;
@@ -51,6 +51,7 @@ try {
     } else {
         ResponseHelper::returnJSON(
             [
+                "code" => $e->errorCode(),
                 "message" => $e->getMessage(),
                 "error" => $e->errorData(),
             ],

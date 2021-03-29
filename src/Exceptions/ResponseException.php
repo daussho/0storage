@@ -7,7 +7,7 @@ class ResponseException extends \Exception
     private $errData;
     private $errCode;
 
-    public function __construct(string $err, array $arg, int $errCode)
+    public function __construct(int $errCode, string $err, array $arg = [])
     {
         parent::__construct($err);
         $this->errData = $arg;
