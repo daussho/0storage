@@ -62,7 +62,7 @@ class AdminController extends RestController
         $query = $this->getQuery();
 
         $model = new Admin();
-        $insert = $model->insertStrict($query);
+        $insert = $model->insert($query);
 
         $this->returnJSON($insert);
     }

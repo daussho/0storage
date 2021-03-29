@@ -26,14 +26,51 @@ class Model extends Store
         $this->_rules = $rules;
     }
 
-    public function insertStrict($data)
+    /**
+     * Creates a new object in the store.
+     * It is stored as a plaintext JSON document.
+     * @param array $data
+     * @return array
+     * @throws IOException
+     * @throws IdNotAllowedException
+     * @throws InvalidArgumentException
+     * @throws JsonException
+     * @throws ResponseException
+     */
+    public function insert(array $data): array
     {
         $this->validateModel($data);
 
-        return $this->insert($data);
+        return parent::insert($data);
     }
 
-    protected function validateModel($data)
+    /**
+     * Creates multiple objects in the store.
+     * @param array $data
+     * @return array
+     * @throws IOException
+     * @throws IdNotAllowedException
+     * @throws InvalidArgumentException
+     * @throws JsonException
+     * @throws ResponseException
+     */
+
+    public function insertMany(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            $this->validateModel($value);
+        }
+
+        return parent::insertMany($data);
+    }
+
+    /**
+     * Validate data based on rules
+     * @param array $data
+     * @return void
+     * @throws ResponseException
+     */
+    protected function validateModel(array $data): void
     {
         $validator = new Validator();
 
