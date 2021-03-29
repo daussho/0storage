@@ -79,4 +79,11 @@ class GlobalHelper
 
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
+
+    public static function printExit($data)
+    {
+        header("Content-Type: application/json");
+        echo json_encode($data);
+        exit;
+    }
 }
