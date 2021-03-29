@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
-use App\Core\Model;
 use App\Core\RestController;
 use App\Exceptions\ResponseException;
 use App\Helpers\GlobalHelper;
@@ -34,22 +33,6 @@ class AdminController extends RestController
         ]);
 
         $this->exclude(["password"])->returnJSON($insert);
-    }
-
-    public function registerNew()
-    {
-        $query = $this->getQuery();
-
-        $model = new Admin();
-        $insert = $model->insert($query);
-
-        $this->returnJSON($insert);
-    }
-
-    public function getAll()
-    {
-        $model = new Model("Admin");
-        $this->returnJSON($model->findAll());
     }
 
     public function login()
