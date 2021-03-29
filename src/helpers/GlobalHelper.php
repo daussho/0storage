@@ -80,14 +80,25 @@ class GlobalHelper
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
-    public static function printExit($data)
+    /**
+     * @param mixed $data
+     * 
+     * @return void
+     */
+    public static function printExit($data): void
     {
         header("Content-Type: application/json");
         echo json_encode($data);
         exit;
     }
 
-    public static function generateRoute(string $version, array $routes)
+    /**
+     * @param string $version
+     * @param array $routes
+     * 
+     * @return array
+     */
+    public static function generateRoute(string $version, array $routes): array
     {
         foreach ($routes as $key => $value) {
             [$methods, $route, $action, $name] = $value;
