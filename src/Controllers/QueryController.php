@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Core\Model;
 use App\Core\RestController;
 use App\Helpers\GlobalHelper;
-use App\Helpers\SleekDBHelper;
 use Rakit\Validation\Validator;
 
 class QueryController extends RestController
@@ -13,20 +13,31 @@ class QueryController extends RestController
 
     public function __construct(string $document)
     {
-        GlobalHelper::validateSchema([
-            "app_name" => "required",
-            "table" => "required",
-            "query" => "required",
-        ], $this->getQuery());
+        // GlobalHelper::validateSchema([
+        //     "app_name" => "required",
+        //     "table" => "required",
+        //     "query" => "required",
+        // ], $this->getQuery());
 
         $this->document = $document;
 
-        $this->store = SleekDBHelper::getStore($this->document);
+        // $this->store = SleekDBHelper::getStore($this->document);
+        $this->store = new Model($this->document);
     }
 
     public function dbQuery()
     {
         $query = $this->getQuery("query");
+
+        $data = call_user_func_array(
+            [
+                $this->store,
+                $this->getQuery("action")
+            ],
+            $this->getQuery("param") ? [$this->getQuery("param")] : []
+        );
+        $this->returnJSON($data);
+        return;
 
         GlobalHelper::validateSchema([
             "name" => [
