@@ -22,7 +22,7 @@ class AdminController extends RestController
         $this->store = new Admin();
     }
 
-    public function register()
+    public function register(): void
     {
         $query = $this->getQuery();
 
@@ -36,7 +36,7 @@ class AdminController extends RestController
         $this->exclude(["password"])->returnJSON($insert);
     }
 
-    public function login()
+    public function login(): void
     {
         $query = $this->getQuery();
 

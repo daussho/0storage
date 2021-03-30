@@ -6,7 +6,6 @@ use App\Core\RestController;
 use App\Helpers\GlobalHelper;
 use App\Helpers\SleekDBHelper;
 use Rakit\Validation\Validator;
-use SleekDB\Store;
 
 class QueryController extends RestController
 {
@@ -27,7 +26,6 @@ class QueryController extends RestController
 
     public function dbQuery()
     {
-        GlobalHelper::printExit($this->document);
         $query = $this->getQuery("query");
 
         GlobalHelper::validateSchema([

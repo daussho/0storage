@@ -113,7 +113,7 @@ class GlobalHelper
         return $routes;
     }
 
-    public static function getAppVersion()
+    public static function getAppVersion(): string
     {
         return $_ENV["APP_VERSION"] ?? "v0";
     }

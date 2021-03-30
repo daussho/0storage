@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Controllers\Admin\AdminController;
 use App\Controllers\QueryController;
 use App\Helpers\GlobalHelper;

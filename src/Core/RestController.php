@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core;
 
+use App\Helpers\GlobalHelper;
 use App\Helpers\ResponseHelper;
 use Exception;
 
@@ -38,8 +41,10 @@ class RestController
      */
     protected function returnJSON(array $data, $statusCode = 200): void
     {
-        foreach ($this->_exclude as $key => $value) {
-            unset($data[$value]);
+        if (!empty($this->_exclude)) {
+            foreach ($this->_exclude as $key => $value) {
+                unset($data[$value]);
+            }
         }
 
         ResponseHelper::returnJSON([
