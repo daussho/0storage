@@ -12,7 +12,7 @@ class QueryController extends RestController
 {
     private $store;
 
-    public function __construct()
+    public function __construct(string $document)
     {
         GlobalHelper::validateSchema([
             "app_name" => "required",
@@ -20,11 +20,14 @@ class QueryController extends RestController
             "query" => "required",
         ], $this->getQuery());
 
-        $this->store = SleekDBHelper::getStore($this->getQuery());
+        $this->document = $document;
+
+        $this->store = SleekDBHelper::getStore($this->document);
     }
 
     public function dbQuery()
     {
+        GlobalHelper::printExit($this->document);
         $query = $this->getQuery("query");
 
         GlobalHelper::validateSchema([

@@ -8,6 +8,7 @@ use App\Core\RestController;
 use App\Exceptions\ResponseException;
 use App\Helpers\GlobalHelper;
 use App\Models\Admin;
+use Firebase\JWT\JWT;
 
 class AdminController extends RestController
 {
@@ -54,6 +55,8 @@ class AdminController extends RestController
         if (!password_verify($query["password"], $user["password"])) {
             throw new ResponseException(400, "Wrong password!");
         }
+
+        $user['token'] = JWT::encode($user, $_ENV['JWT_KEY']);
 
         $this->exclude(["_id", "password"])->returnJSON($user);
     }

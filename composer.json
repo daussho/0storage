@@ -12,7 +12,8 @@
     "rakibtg/sleekdb": "2.8.2",
     "altorouter/altorouter": "^2.0",
     "vlucas/phpdotenv": "^5.3",
-    "rakit/validation": "^1.4"
+    "rakit/validation": "^1.4",
+    "firebase/php-jwt": "^5.2"
   },
   "license": "MIT",
   "authors": [

@@ -105,11 +105,16 @@ class GlobalHelper
             $routes[$key] = [
                 $methods,
                 "/$version$route",
-                "$action",
+                $action,
                 "$name.$version",
             ];
         }
 
         return $routes;
+    }
+
+    public static function getAppVersion()
+    {
+        return $_ENV["APP_VERSION"] ?? "v0";
     }
 }

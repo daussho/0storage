@@ -3,6 +3,7 @@
 require __DIR__ . '/vendor/autoload.php';
 
 use App\Exceptions\ResponseException;
+use App\Helpers\GlobalHelper;
 use App\Helpers\ResponseHelper;
 
 $flag = $_GET['show_error_log'] ?? 0;
@@ -15,27 +16,32 @@ try {
     $dotenv->load();
     $dotenv->required(['DB_HASH', 'APP_NAME'])->notEmpty();
 
+    $version = GlobalHelper::getAppVersion();
     $router = new AltoRouter();
 
     // Router list
-    $router->addRoutes($route['v0']);
+    $router->addRoutes($route[$version]);
 
     // Temp router
-    $router->addRoutes($route['v0a']);
+    $router->addRoutes($route["{$version}a"]);
 
     // match current request url
     $match = $router->match();
 
     // call closure or throw 404 status
     if (is_array($match) && is_callable($match['target'])) {
-        list($controller, $action) = explode('::', $match['target']);
-        if (is_callable(array($controller, $action))) {
-            $obj = new $controller();
-            call_user_func_array(array($obj, $action), array($match['params']));
+        if (is_object($match['target'])) {
+            call_user_func_array($match['target'], $match['params']);
         } else {
-            // here your routes are wrong.
-            // Throw an exception in debug, send a  500 error in production
-            throw new ResponseException(500, "Method not found");
+            [$controller, $action] = explode('::', $match['target']);
+            if (is_callable(array($controller, $action))) {
+                $obj = new $controller();
+                call_user_func_array(array($obj, $action), array($match['params']));
+            } else {
+                // here your routes are wrong.
+                // Throw an exception in debug, send a  500 error in production
+                throw new ResponseException(500, "Method not found");
+            }
         }
     } else {
         // no route was matched
