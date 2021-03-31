@@ -38,7 +38,14 @@ class QueryController extends RestController
             );
             $this->returnJSON($data);
         } catch (\Throwable $e) {
-            throw new ResponseException(500, $e->getMessage(), ["trace" => $e->getTrace()]);
+            throw new ResponseException(
+                500,
+                $e->getMessage(),
+                [
+                    "message" => $e->getMessage(),
+                    "trace" => $e->getTrace()
+                ]
+            );
         }
     }
 
