@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Model;
 use App\Core\RestController;
+use App\Exceptions\ResponseException;
 use App\Helpers\GlobalHelper;
 use Rakit\Validation\Validator;
 
@@ -13,61 +14,31 @@ class QueryController extends RestController
 
     public function __construct(string $document)
     {
-        // GlobalHelper::validateSchema([
-        //     "app_name" => "required",
-        //     "table" => "required",
-        //     "query" => "required",
-        // ], $this->getQuery());
-
         $this->document = $document;
 
-        // $this->store = SleekDBHelper::getStore($this->document);
         $this->store = new Model($this->document);
     }
 
     public function dbQuery()
     {
-        $query = $this->getQuery("query");
-
-        $data = call_user_func_array(
-            [
-                $this->store,
-                $this->getQuery("action")
-            ],
-            $this->getQuery("param") ? $this->getQuery("param") : []
-        );
-        $this->returnJSON($data);
-        return;
+        $query = $this->getQuery();
 
         GlobalHelper::validateSchema([
-            "name" => [
-                "required",
-                (new Validator())("in", [
-                    "find",
-                    "insert",
-                    "edit",
-                    "delete",
-                    "query_builder",
-                ]),
-            ],
+            "action" => "required",
+            "param" => "required"
         ], $query);
 
-        switch ($query['name']) {
-            case "find":
-                $this->fetch();
-                break;
-            case "insert":
-                $this->insert();
-                break;
-            case "edit":
-                $this->edit();
-                break;
-            case "delete":
-                // $this->delete();
-                break;
-            case "query_builder":
-                // $this->queryBuilder();
-                break;
+        try {
+            $data = call_user_func_array(
+                [
+                    $this->store,
+                    $query["action"],
+                ],
+                $query["param"] ?? null
+            );
+            $this->returnJSON($data);
+        } catch (\Throwable $e) {
+            throw new ResponseException(500, $e->getMessage(), ["trace" => $e->getTrace()]);
         }
     }
 

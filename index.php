@@ -66,7 +66,7 @@ try {
             $e->errorCode()
         );
     }
-} catch (Exception $e) {
+} catch (\Throwable $e) {
     if ($flag == 1) {
         $msg = $e->getMessage();
     }
