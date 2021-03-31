@@ -12,7 +12,7 @@ class SleekDBHelper
     private const MAX_QUERY_CACHE = 30;
     private const DATA_DIR = __DIR__ . "/../../mydb";
     private const DB_CONFIG = [
-        "auto_cache" => true,
+        "auto_cache" => false,
         "cache_lifetime" => self::MAX_QUERY_CACHE,
         "timeout" => 120,
         "primary_key" => "_id",

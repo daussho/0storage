@@ -24,11 +24,20 @@ return [
             "db_query"
         ],
 
+        // Auth
         [
             "POST",
             "/auth/register",
             function () {
                 (new AuthController)->register();
+            },
+            "auth_register"
+        ],
+        [
+            "POST",
+            "/auth/login",
+            function () {
+                (new AuthController)->login();
             },
             "auth_login"
         ],
