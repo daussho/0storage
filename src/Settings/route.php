@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Controllers\Admin\AdminController;
+use App\Controllers\AuthController;
 use App\Controllers\QueryController;
 use App\Exceptions\ResponseException;
 use App\Helpers\GlobalHelper;
@@ -15,7 +16,7 @@ return [
             "POST",
             "/q/[a:document]?",
             function ($document) {
-                if (in_array($document, ["admin"])) {
+                if (in_array($document, ["admin", "user"])) {
                     throw new ResponseException(403, "You don't have access");
                 }
                 (new QueryController($document))->dbQuery();
@@ -23,7 +24,14 @@ return [
             "db_query"
         ],
 
-        ["GET", "/auth/login", "App\Controllers\AuthController::login", "auth_login"],
+        [
+            "POST",
+            "/auth/register",
+            function () {
+                (new AuthController)->register();
+            },
+            "auth_login"
+        ],
 
         // Admin
         ["POST", "/admin/register", "App\Controllers\Admin\AdminController::register", "admin_register"],

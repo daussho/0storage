@@ -35,7 +35,7 @@ class UniqueRule extends Rule
 
         // do query
         $filter = [$key, "=", $value];
-        $data = $this->store->findBy($filter);
+        $data = $this->store->findOneBy($filter);
 
         // true for valid, false for invalid
         return empty($data);

@@ -8,7 +8,7 @@ use App\Exceptions\ResponseException;
 use App\Helpers\GlobalHelper;
 use App\Helpers\ResponseHelper;
 
-$flag = $_GET['show_error_log'] ?? 0;
+
 $msg = "Error, please contact administrator.";
 
 $route = include(__DIR__ . "/src/Settings/route.php");
@@ -17,6 +17,11 @@ try {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->load();
     $dotenv->required(['DB_HASH', 'APP_NAME'])->notEmpty();
+
+    $flag = $_ENV["SHOW_ERROR_LOG"];
+    if (!empty($_GET['show_error_log'])) {
+        $flag = $_GET['show_error_log'];
+    }
 
     $version = GlobalHelper::getAppVersion();
     $router = new AltoRouter();
@@ -62,16 +67,22 @@ try {
                 "code" => $e->errorCode(),
                 "message" => $e->getMessage(),
                 "error" => $e->errorData(),
+                "trace" => $e->getTrace(),
             ],
             $e->errorCode()
         );
     }
 } catch (\Throwable $e) {
+    $err = [
+        "message" => $msg
+    ];
+
     if ($flag == 1) {
-        $msg = $e->getMessage();
+        $err = [
+            "message" => $e->getMessage(),
+            "trace" => $e->getTrace(),
+        ];
     }
 
-    ResponseHelper::returnJSON([
-        "message" => $msg,
-    ], 500);
+    ResponseHelper::returnJSON($err, 500);
 }
