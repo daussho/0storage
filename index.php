@@ -25,7 +25,7 @@ try {
     $router->addRoutes($route[$version]);
 
     // Temp router
-    $router->addRoutes($route["{$version}a"]);
+    $router->addRoutes($route["{$version}.a"]);
 
     // match current request url
     $match = $router->match();

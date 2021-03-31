@@ -10,28 +10,33 @@ use App\Helpers\GlobalHelper;
 $version = GlobalHelper::getAppVersion();
 
 return [
-    "$version" => GlobalHelper::generateRoute("$version", [
+    $version => GlobalHelper::generateRoute($version, [
         [
-            'POST',
-            '/q/[a:document]?',
+            "POST",
+            "/q/[a:document]?",
             function ($document) {
-                if (!in_array($document, ["admin"])) {
-                    (new QueryController($document))->dbQuery();
+                if (in_array($document, ["admin"])) {
+                    throw new ResponseException(403, "You don't have access");
                 }
-                throw new ResponseException(403, "You don't have access");
+                (new QueryController($document))->dbQuery();
             },
-            'db_query'
+            "db_query"
         ],
 
-        ['GET', '/auth/login', 'App\Controllers\AuthController::login', 'auth_login'],
+        ["GET", "/auth/login", "App\Controllers\AuthController::login", "auth_login"],
 
         // Admin
-        ['POST', '/admin/register', 'App\Controllers\Admin\AdminController::register', 'admin_register'],
-        ['POST', '/admin/login', 'App\Controllers\Admin\AdminController::login', 'admin_login'],
+        ["POST", "/admin/register", "App\Controllers\Admin\AdminController::register", "admin_register"],
+        ["POST", "/admin/login", "App\Controllers\Admin\AdminController::login", "admin_login"],
     ]),
-    "{$version}.a" => GlobalHelper::generateRoute("{$version}a", [
-        ['POST', '/admin/login', function () {
-            (new AdminController())->login();
-        }, 'admin_login'],
+    "$version.a" => GlobalHelper::generateRoute("$version.a", [
+        [
+            "POST",
+            "/admin/login",
+            function () {
+                (new AdminController())->login();
+            },
+            "admin_login"
+        ],
     ]),
 ];
