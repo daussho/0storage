@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Controllers\Admin\AdminController;
 use App\Controllers\QueryController;
+use App\Exceptions\ResponseException;
 use App\Helpers\GlobalHelper;
 
 $version = GlobalHelper::getAppVersion();
@@ -11,7 +12,10 @@ $version = GlobalHelper::getAppVersion();
 return [
     "$version" => GlobalHelper::generateRoute("$version", [
         ['POST', '/q/[a:document]?', function ($document) {
-            (new QueryController($document))->dbQuery();
+            if (!in_array($document, ["admin"])) {
+                (new QueryController($document))->dbQuery();
+            }
+            throw new ResponseException(403, "You don't have access");
         }, 'db_query'],
         ['GET', '/auth/login', 'App\Controllers\AuthController::login', 'auth_login'],
 
