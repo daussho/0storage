@@ -34,7 +34,7 @@ class QueryController extends RestController
                 $this->store,
                 $this->getQuery("action")
             ],
-            $this->getQuery("param") ? [$this->getQuery("param")] : []
+            $this->getQuery("param") ? $this->getQuery("param") : []
         );
         $this->returnJSON($data);
         return;
